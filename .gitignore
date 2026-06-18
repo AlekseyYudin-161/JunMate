@@ -1,0 +1,17 @@
+/.kodik
+
+.git
+__pycache__/
+*.pyc
+
+.env
+.venv/
+venv/
+
+.DS_Store
+.idea/
+.vscode/
+.pytest_cache/
+logs/
+tmp/
+wheelhouse/
