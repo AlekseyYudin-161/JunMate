@@ -1,6 +1,5 @@
-# /.kodik
+.kodik/settings.json
 
-.git
 __pycache__/
 *.pyc
 
@@ -15,3 +14,5 @@ venv/
 logs/
 tmp/
 wheelhouse/
+
+.streamlit/secrets.toml

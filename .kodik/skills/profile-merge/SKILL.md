@@ -30,7 +30,7 @@ class TurnResult(BaseModel):
     completeness: float = Field(ge=0, le=1)
     ready_to_render: bool = False
 ```
-(Education/Experience/Project/TrackResult/SkillMatch/ResumeOutput/Critique — см. plan §5.)
+(Education/Experience/Project/TrackResult/SkillMatch/ResumeOutput/Critique — см. docs/JunMate_plan_v2.1.md). §5.)
 
 ## Функция слияния (core/merge.py)
 ```python

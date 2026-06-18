@@ -110,8 +110,8 @@ Streamlit Community Cloud: код в Kodik → push в GitHub → автодеп
 
 **TASK 0 — Каркас + деплой**
 ```
-Следуй .kodikrules и docs/JunMate_plan_v2.1.md §6. Создай структуру репо, requirements.txt, .gitignore (исключи .env,
-.streamlit/secrets.toml), .env.example, шаблон .streamlit/secrets.toml. Реализуй app.py (роутинг +
+Не трогай существующие файлы и папки: .gitignore, .kodik/, docs/. Если файл уже существует — не перезаписывай, при необходимости предложи изменения отдельно. Создавай только отсутствующие файлы по структуре docs/JunMate_plan_v2.1.md §6.
+Следуй .kodikrules и docs/JunMate_plan_v2.1.md §6. Создай структуру репо, requirements.txt, .gitignore (исключи .env, .streamlit/secrets.toml), .env.example, шаблон .streamlit/secrets.toml. Реализуй app.py (роутинг +
 «ok»), core/config.py (ключ из st.secrets, фоллбэк .env), core/state.py, core/schemas.py (docs/JunMate_plan_v2.1.md §5),
 core/merge.py (docs/JunMate_plan_v2.1.md §5a), core/llm.py — провайдер-агностичный с тировым роутингом (docs/JunMate_build_guide_v3.2.md §2a:
 PROVIDERS/MODEL_TIERS/AGENT_TIER; call_llm(system,user,schema,tier); force-JSON+repair+fallback;
