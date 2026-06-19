@@ -1,5 +1,8 @@
 """Точка входа JunMate — роутинг на страницы."""
+import logging
 import streamlit as st
+
+logging.basicConfig(level=logging.INFO)
 
 
 def main() -> None:
