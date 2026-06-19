@@ -18,7 +18,7 @@ logging.basicConfig(
 logging.getLogger("httpx").setLevel(logging.WARNING)   # убрать шум httpx
 
 def test_parser():
-    test_text = "Иван Иванов, Frotend разработчик. Обучение: Нетология, 2 года. Стек: Django, Cron, JS, Docker. Языки: Английский B2"
+    test_text = "Иван Иванов. Frontend разработчик. Обучение: Нетология, 2 года. Стек: Django, Cron, JS, Docker. Языки: Английский B2"
     print(f"--- Starting test with text: {test_text} ---")
     
     try:
@@ -26,7 +26,7 @@ def test_parser():
         print("--- Success! Profile: ---")
         print(profile.model_dump_json(indent=2))
     except Exception as e:
-        print(f"--- Failed! ---")
+        print("--- Failed! ---")
         # Ошибка уже залогирована в core/llm.py, здесь просто выводим тип и сообщение
         print(f"{type(e).__name__}: {e}")
 
