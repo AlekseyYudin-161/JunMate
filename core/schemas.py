@@ -1,7 +1,7 @@
 """Контракты данных (pydantic v2)."""
 from typing import Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class Education(BaseModel):
@@ -36,6 +36,38 @@ class Profile(BaseModel):
     skills: list[str] = Field(default_factory=list)
     achievements: list[str] = Field(default_factory=list)
     languages: list[str] = Field(default_factory=list)
+
+    @field_validator(
+        "education", "experience", "projects",
+        "skills", "achievements", "languages",
+        mode="before",
+    )
+    @classmethod
+    def none_to_list(cls, v):
+        if v is None:
+            return []
+        if isinstance(v, dict):        # модель прислала один объект вместо списка
+            return [v]
+        return v
+
+    @field_validator("languages", mode="before")
+    @classmethod
+    def normalize_languages(cls, v):
+        if not isinstance(v, list):
+            return v
+        out = []
+        for item in v:
+            if isinstance(item, str):
+                out.append(item)
+            elif isinstance(item, dict):
+                if "language" in item or "name" in item:
+                    lang = item.get("language") or item.get("name") or ""
+                    level = item.get("level") or ""
+                    out.append(f"{lang} {level}".strip())
+                else:                                                       # {'Английский': 'B2'}
+                    for k, val in item.items():
+                        out.append(f"{k} {val}".strip())
+        return out
 
 
 class TrackResult(BaseModel):
