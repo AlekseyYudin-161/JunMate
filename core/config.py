@@ -7,6 +7,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 PROVIDERS = {
+    "proxyapi": {
+        "base_url": "https://api.proxyapi.ru/openai/v1",
+        "key_env": "PROXYAPI_API_KEY",
+        # "extra_headers": {"HTTP-Referer": "https://junmate.streamlit.app", "X-Title": "JunMate"},
+        "extra_headers": {},
+    },
     "openrouter": {
         "base_url": "https://openrouter.ai/api/v1",
         "key_env": "OPENROUTER_API_KEY",
@@ -14,15 +20,28 @@ PROVIDERS = {
     },
 }
 
+# ₽ за 1 токен (input, output).
+MODEL_PRICING = {
+    # agentplatform
+    # "openai/gpt-5-mini":   {"in": 27 / 1_000_000, "out": 216 / 1_000_000},
+    # "openai/gpt-4.1-mini": {"in": 44 / 1_000_000, "out": 173 / 1_000_000},
+
+    # proxyapi
+    # "gpt-5-mini":   {"in": 65 / 1_000_000, "out": 516 / 1_000_000},
+    "gpt-4.1-mini": {"in": 104 / 1_000_000, "out": 413 / 1_000_000},
+
+    # free-модели OpenRouter:
+    "openai/gpt-oss-120b:free": {"in": 0.0, "out": 0.0},
+    # "openai/gpt-oss-20b:free":  {"in": 0.0, "out": 0.0},
+}
+
 MODEL_TIERS = {
     "light": [
-        {"provider": "openrouter", "model": "google/gemma-4-26b-a4b-it:free"},
-        {"provider": "openrouter", "model": "qwen/qwen3-next-80b-a3b-instruct:free"},
-        {"provider": "openrouter", "model": "openai/gpt-oss-20b:free"},
+        {"provider": "proxyapi", "model": "gpt-4.1-mini"},
+        {"provider": "openrouter", "model": "openai/gpt-oss-120b:free"},
     ],
     "heavy": [
-        {"provider": "openrouter", "model": "qwen/qwen3-next-80b-a3b-instruct:free"},
-        {"provider": "openrouter", "model": "google/gemma-4-31b-it:free"},
+        {"provider": "proxyapi", "model": "gpt-4.1-mini"},
         {"provider": "openrouter", "model": "openai/gpt-oss-120b:free"},
     ],
 }
