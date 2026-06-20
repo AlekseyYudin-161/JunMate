@@ -189,14 +189,14 @@ def merge_profile(profile: dict, patch: dict) -> dict:
 ```
 junmate/
   app.py
-  pages/ chat.py courses.py auth.py welcome.py
+  screens/ chat.py courses.py auth.py welcome.py
   core/ config.py schemas.py llm.py merge.py pdf_in.py pdf_out.py state.py
   agents/ parser.py track.py matcher.py turn.py rewriter.py critic.py
           prompts/ parser.txt track.txt matcher.txt turn.txt rewriter_hh.txt critic.txt
   data/ courses.json
   docs/ JunMate_build_guide_v3.2.md JunMate_plan_v2.1.md
   eval/ samples/ run_eval.py
-  tests/
+  tests/ manual_llm_check.py
   .kodikrules .env.example requirements.txt
 ```
 
@@ -206,7 +206,20 @@ junmate/
 
 ### A1 Parser (prompts/parser.txt)
 ```
-Ты — парсер резюме. Вход — текст из PDF или описание себя текстом. Извлеки ТОЛЬКО явно присутствующие факты, ничего не додумывай. Нет поля — null/пусто. Верни ТОЛЬКО валидный JSON по схеме Profile. Без markdown и текста вне JSON.
+Ты — парсер резюме. Вход — текст из PDF или описание себя текстом.
+Извлеки ТОЛЬКО явно присутствующие факты, ничего не додумывай.
+full_name — ФИО кандидата, если есть. target_role — желаемая/текущая должность или
+специализация (например «Frontend разработчик»), если указана.
+contacts — словарь вида {"email": "...", "phone": "...", "telegram": "...", "github": "..."}, только указанные.
+summary — краткое «О себе» одной-двумя фразами, если есть.
+education — список объектов вида {"institution": "...", "degree": "...", "field": "...", "years": "..."}.
+experience — список объектов вида {"org": "...", "role": "...", "period": "...", "bullets": ["...", "..."]}.
+projects — список объектов вида {"name": "...", "description": "...", "stack": ["..."], "link": "..."}.
+skills — список строк из стека/технологий (например "Django", "Docker").
+achievements — список строк (хакатоны, соревнования, награды, публикации).
+languages — список строк вида "Английский B2".
+Нет поля — null/пусто. Верни ТОЛЬКО валидный JSON по схеме Profile.
+Без markdown и текста вне JSON.
 ```
 
 ### A2 Track (prompts/track.txt)
