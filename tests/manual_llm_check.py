@@ -1,13 +1,6 @@
 import logging
-import sys
-import os
-
-# Добавляем корень проекта в sys.path для корректных импортов при запуске из любой папки
-root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if root_dir not in sys.path:
-    sys.path.append(root_dir)
-
 from agents.parser import parse_resume
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -17,10 +10,13 @@ logging.basicConfig(
 
 logging.getLogger("httpx").setLevel(logging.WARNING)   # убрать шум httpx
 
+
 def test_parser():
-    test_text = "Иван Иванов. Frontend разработчик. Обучение: Нетология, 2 года. Стек: Django, Cron, JS, Docker. Языки: Английский B2"
+    test_text = """
+    Иван Петров, Backend разработчик. Обучение: РТУ МИРЭА: 2024 г. - настоящее время; 1.5 года стажировки в Яндекс на позиции backend разработчика. Стек: Django, Cron, Frenos, JS, Docker. Языки: Английский C1
+    """
     print(f"--- Starting test with text: {test_text} ---")
-    
+
     try:
         profile = parse_resume(test_text)
         print("--- Success! Profile: ---")
