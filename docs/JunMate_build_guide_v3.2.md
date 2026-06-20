@@ -53,6 +53,7 @@ PROVIDERS = {
 ```python
 MODEL_TIERS = {
     "light": [
+        {"provider": "proxyapi", "model": "gpt-4.1-nano"},
         {"provider": "proxyapi", "model": "gpt-4.1-mini"},
         {"provider": "openrouter", "model": "openai/gpt-oss-120b:free"},
     ],

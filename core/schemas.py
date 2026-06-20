@@ -12,10 +12,6 @@ class Education(BaseModel):
 
 
 class Experience(BaseModel):
-    # org: str
-    # role: str
-    # period: Optional[str] = None
-    # bullets: list[str] = Field(default_factory=list)
     org: Optional[str] = None
     role: Optional[str] = None
     period: Optional[str] = None
