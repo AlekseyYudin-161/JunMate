@@ -4,7 +4,7 @@
 
 ## Стек (не добавляй другие фреймворки без явного запроса)
 - Python 3.12. UI — Streamlit. Валидация — pydantic v2.
-- LLM рантайма — proxiapi (OpenAI-совместимый) через httpx/openai SDK.
+- LLM рантайма — proxyapi (OpenAI-совместимый) через httpx/openai SDK.
 - PDF вход — pdfplumber (фоллбэк pypdf). PDF выход — weasyprint (HTML+CSS → PDF).
 - Авторизация (опционально, в конце) — streamlit-authenticator.
 
@@ -14,7 +14,7 @@
 - Тяжёлые агенты (Track A2, Gap A3) — один раз на входе, НЕ на каждый ход диалога.
 - На каждый ход — один вызов turn-агента A4 → {reply, profile_patch, completeness, ready_to_render}.
 - Формат hh.ru применяется ТОЛЬКО на рендере (агент A5), НЕ в диалоге. В диалоге правится Profile, не текст.
-- track = направление (enum Industry/Research/Education/Startup), target_role = специализация (открытое поле: NLP/ML/CV/Backend/…). Не превращай роли в значения track.
+- track = направление (enum Industry/Research/Education/Startup), target_role = специализация (открытое поле: NLP/ML/CV/Backend/SSM/BI analyst/…). Не превращай роли в значения track.
 
 ## Слияние profile_patch — делает КОД, не модель (критично)
 - Применение profile_patch к Profile выполняет детерминированная функция core/merge.py (см. docs/JunMate_plan_v2.1.md §5a):
@@ -29,7 +29,7 @@
 ## Выбор модели — по тиру агента, конфигом
 - Модель выбирается по тиру (light/heavy) из конфига core/config.py, а не хардкодом в коде агента.
 - Имена моделей и провайдеров меняет ТОЛЬКО человек. Агент их не меняет, не добавляет и не «проверяет» сетевыми вызовами.
-- Основной провайдер — proxiapi (платный, держит схему). Бесплатные модели OpenRouter — только нижний фоллбэк.
+- Основной провайдер — proxyapi (платный, держит схему). Бесплатные модели OpenRouter — только нижний фоллбэк.
 - При ошибке модели агент показывает лог (HTTP-код + сообщение) и спрашивает — НЕ перебирает сам.
 - Решения о моделях подтверждать eval (eval/run_eval.py), а не верой.
 
