@@ -20,61 +20,59 @@ JunMate — разговорный ассистент карьерного ст�
 - [☑️ ] Аккаунт OpenRouter + API-ключ (этого достаточно — бесплатно).
 - [☑️ ] Google-форма (фидбэк+баг), скопировать ссылку.
 - [  ] `data/courses.json` — реальные курсы Stepik/ODS/Karpov вручную (агент не выдумывает).
-- [  ] Подключить репо к Streamlit Cloud: app.py, OPENROUTER_API_KEY в Secrets, задеплоить «ok» → URL.
-- [  ] (ОПЦ., позже) agentplatform.ru + ключ — только если решишь платную модель на демо-день.
+- [☑️ ] Подключить репо к Streamlit Cloud: app.py, OPENROUTER_API_KEY в Secrets, задеплоить «ok» → URL.
 
 Генерит агент: структура репо, requirements.txt, .gitignore, .env.example, .streamlit/secrets.toml (шаблон), весь код.
 
 ---
 
-## 2. LLM-провайдеры (по умолчанию — бесплатно)
-
-Сейчас и для всей разработки — только бесплатные модели OpenRouter, затрат ноль. agentplatform — опциональный апгрейд на демо-день (закомментирован ниже).
+## 2. LLM-провайдеры (основной — proxyapi (платный), фоллбэк — openrouter free)
 
 ```python
 PROVIDERS = {
+    "proxyapi": {
+        "base_url": "https://api.proxyapi.ru/openai/v1",
+        "key_env": "PROXIAPI_API_KEY",
+        "extra_headers": {},
+    },
     "openrouter": {
         "base_url": "https://openrouter.ai/api/v1",
         "key_env": "OPENROUTER_API_KEY",
-        "extra_headers": {"HTTP-Referer": "<url-приложения>", "X-Title": "JunMate"},
+        "extra_headers": {"HTTP-Referer": "https://junmate.streamlit.app", "X-Title": "JunMate"},
     },
-    # ОПЦ. позже: "agentplatform": {"base_url": "https://api.agentplatform.ru/v1",
-    #              "key_env": "AGENTPLATFORM_API_KEY", "extra_headers": {}},
 }
 ```
 
 Заголовки HTTP-Referer/X-Title — идентификация приложения для OpenRouter, НЕ данные резюме
-(текст резюме идёт в теле запроса). На agentplatform они не нужны → extra_headers пустой.
+(текст резюме идёт в теле запроса). На agentplatform/proxyapi они не нужны → extra_headers пустой.
 
 ### 2a. Роутинг моделей по тирам (по умолчанию; подтвердить eval'ом)
 
-Имена `:free`-моделей меняются — на TASK 1 пусть Kodik через sub_agent сверит их актуальность
-и заменит снятые. Порядок в каждом тире = primary → fallback.
+Порядок в каждом тире = primary → fallback.
 
 ```python
 MODEL_TIERS = {
-    "light": [   # лёгкие задачи: классификация трека
-        {"provider": "openrouter", "model": "google/gemma-4-26b-a4b-it:free"},
-        {"provider": "openrouter", "model": "qwen/qwen3-next-80b-a3b-instruct:free"},
-        {"provider": "openrouter", "model": "openai/gpt-oss-20b:free"},
+    "light": [
+        {"provider": "proxyapi", "model": "gpt-4.1-mini"},
+        {"provider": "openrouter", "model": "openai/gpt-oss-120b:free"},
     ],
-    "heavy": [   # парсинг, gap, диалог, рерайт, критик: русский + JSON
-        {"provider": "openrouter", "model": "qwen/qwen3-next-80b-a3b-instruct:free"},
-        {"provider": "openrouter", "model": "google/gemma-4-31b-it:free"},
+    "heavy": [
+        {"provider": "proxyapi", "model": "gpt-4.1-mini"},
         {"provider": "openrouter", "model": "openai/gpt-oss-120b:free"},
     ],
 }
+
 AGENT_TIER = {
     "track": "light",
-    "parser": "heavy", "matcher": "heavy", "turn": "heavy",
-    "rewriter": "heavy", "critic": "heavy",
+    "parser": "heavy",
+    "matcher": "heavy",
+    "turn": "heavy",
+    "rewriter": "heavy",
+    "critic": "heavy",
 }
 ```
 
-`core/llm.py`: `call_llm(system, user, schema, tier)` идёт по списку тира с force-JSON + pydantic +
-один repair + fallback на следующую модель. Почему так: Qwen3-Next силён в русском и structured
-output → primary на тяжёлое; Gemma-31b — дисципл/инструкции → фоллбэк; Gemma-26b (быстрая) — на
-лёгкий A2; gpt-oss — нижний фоллбэк. После eval можно поменять порядок одной строкой.
+`core/llm.py`: `call_llm(system, user, schema, tier)` идёт по списку тира с force-JSON + pydantic + один repair + fallback на следующую модель. 
 
 ### 2b. Слияние profile_patch — делает КОД (не модель)
 
@@ -124,7 +122,6 @@ PROVIDERS/MODEL_TIERS/AGENT_TIER; call_llm(system,user,schema,tier); force-JSON+
 текста → ошибка). Экран входа с ДВУМЯ путями (file_uploader PDF ИЛИ text_area) → один parser (A1) →
 Profile. Агенты track (A2, tier=light), matcher (A3, tier=heavy) по промптам §7. Честный progress bar
 (парс→трек→gap). Запиши Profile/Track/Gap в session_state, покажи первое сообщение (трек + 1 строка).
-Используй sub_agent: сверь актуальность :free-моделей из MODEL_TIERS на OpenRouter, замени снятые.
 ```
 
 **TASK 2 — Ядро диалога → резюме → PDF**
@@ -170,5 +167,3 @@ merge и схемы. README (проблема, запуск, архитекту�
 | 3 | 26–28.06 | TASK 3 | critic, стриминг, сброс/фидбэк, (опц.) стоп |
 | 4 | 29.06–01.07 | TASK 4 | курсы → авторизация (режется первой) |
 | 5 | 02–дедлайн | TASK 5 | eval, README, демо-видео, монетизация |
-
-agentplatform/платная модель — опциональный шаг на демо-день. До тех пор — бесплатно.
