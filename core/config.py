@@ -27,16 +27,16 @@ MODEL_PRICING = {
     # "openai/gpt-4.1-mini": {"in": 44 / 1_000_000, "out": 173 / 1_000_000},
 
     # proxyapi
-    # "gpt-5-mini":   {"in": 65 / 1_000_000, "out": 516 / 1_000_000},
+    "gpt-4.1-nano": {"in": 26 / 1_000_000, "out": 104 / 1_000_000},
     "gpt-4.1-mini": {"in": 104 / 1_000_000, "out": 413 / 1_000_000},
 
     # free-модели OpenRouter:
     "openai/gpt-oss-120b:free": {"in": 0.0, "out": 0.0},
-    # "openai/gpt-oss-20b:free":  {"in": 0.0, "out": 0.0},
 }
 
 MODEL_TIERS = {
     "light": [
+        {"provider": "proxyapi", "model": "gpt-4.1-nano"},
         {"provider": "proxyapi", "model": "gpt-4.1-mini"},
         {"provider": "openrouter", "model": "openai/gpt-oss-120b:free"},
     ],
