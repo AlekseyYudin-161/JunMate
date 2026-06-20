@@ -12,10 +12,21 @@ class Education(BaseModel):
 
 
 class Experience(BaseModel):
-    org: str
-    role: str
+    # org: str
+    # role: str
+    # period: Optional[str] = None
+    # bullets: list[str] = Field(default_factory=list)
+    org: Optional[str] = None
+    role: Optional[str] = None
     period: Optional[str] = None
     bullets: list[str] = Field(default_factory=list)
+
+    @field_validator("org", "role", "period", mode="before")
+    @classmethod
+    def empty_to_none(cls, v):
+        if isinstance(v, str) and v.strip().lower() in ("null", "none", ""):
+            return None
+        return v
 
 
 class Project(BaseModel):
