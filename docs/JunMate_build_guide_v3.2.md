@@ -118,11 +118,29 @@ PROVIDERS/MODEL_TIERS/AGENT_TIER; call_llm(system,user,schema,tier); force-JSON+
 ```
 
 **TASK 1 — Приём резюме/текста и анализ**
+
+TASK 1.1
 ```
-Следуй .kodikrules и docs/JunMate_plan_v2.1.md §2,5,7. core/pdf_in.py (PDF→текст, pdfplumber, фоллбэк pypdf; скан без
-текста → ошибка). Экран входа с ДВУМЯ путями (file_uploader PDF ИЛИ text_area) → один parser (A1) →
-Profile. Агенты track (A2, tier=light), matcher (A3, tier=heavy) по промптам §7. Честный progress bar
-(парс→трек→gap). Запиши Profile/Track/Gap в session_state, покажи первое сообщение (трек + 1 строка).
+Не трогай и не переписывай готовые файлы: agents/parser.py (A1 отлажен) и core/schemas.py (валидаторы). A1 используй как есть.
+Следуй .kodikrules и docs/JunMate_plan_v2.1.md §2,5. Создай core/pdf_in.py: PDF→текст через pdfplumber
+(фоллбэк pypdf); если текста нет/скан → верни понятную ошибку, без OCR. 
+Сделай экран входа с ДВУМЯ путями: st.file_uploader (PDF) ИЛИ st.text_area («нет резюме? опиши себя текстом»). Оба пути → один parse_resume (A1) → Profile. Покажи полученный Profile через st.json для проверки. Запиши Profile в st.session_state.
+Не запускай лишних сетевых вызовов. Запусти streamlit, дай проверить.
+```
+
+TASK 1.2
+```
+Следуй .kodikrules и docs/JunMate_plan_v2.1.md §5,7. Реализуй только agents/track.py по образцу parser.py:
+функция определяет TrackResult из Profile, промпт A2 из §7, вызов через call_llm с tier="heavy".
+Имена моделей не хардкодь — только из MODEL_TIERS. После парса вызови track в welcome.py, результат покажи (st.json) и запиши в st.session_state. Matcher НЕ трогай — он будет отдельной задачей. Не трогай parser/schemas. Запусти, дай проверить.
+```
+
+TASK 1.3
+```
+Следуй .kodikrules и docs/JunMate_plan_v2.1.md §5,7. Реализуй agents/matcher.py по образцу:
+SkillMatch из Profile + target_role, промпт A3 из §7, call_llm с tier="heavy". Собери полный вход-пайплайн:
+парс → трек → gap, с честным progress bar по реальным стадиям (парс 33% → трек 66% → gap 100%). Запиши Profile/Track/Gap в st.session_state. Покажи первое сообщение пользователю (трек + 1 строка). Не трогай готовые файлы.
+Запусти, дай проверить.
 ```
 
 **TASK 2 — Ядро диалога → резюме → PDF**
