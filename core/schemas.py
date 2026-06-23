@@ -83,6 +83,18 @@ class TrackResult(BaseModel):
     evidence: list[str]
     runner_up: Optional[str] = None
 
+    @field_validator("confidence", mode="before")
+    @classmethod
+    def word_to_number(cls, v):
+        if isinstance(v, str):
+            return {"low": 0.3, "medium": 0.6, "high": 0.9}.get(v.strip().lower(), 0.5)
+        return v
+
+    @field_validator("runner_up", mode="before")
+    @classmethod
+    def dict_to_none(cls, v):
+        return None if isinstance(v, dict) else v
+
 
 class SkillMatch(BaseModel):
     target_role: str
