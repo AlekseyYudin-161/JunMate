@@ -11,19 +11,19 @@ logger = logging.getLogger(__name__)
 T = TypeVar("T", bound=BaseModel)
 
 
-def _log_usage(model: str, resp) -> None:
+def _log_usage(agent: str, model: str, resp) -> None:
     """Логирует токены и стоимость вызова по resp.usage."""
     usage = getattr(resp, "usage", None)
 
     if usage is None:
-        logger.info("\nusage недоступен для %s\n", model)
+        logger.info("\n[%s] usage недоступен для %s\n", agent, model)
         return
 
     pin = getattr(usage, "prompt_tokens", 0) or 0
     pout = getattr(usage, "completion_tokens", 0) or 0
     price = MODEL_PRICING.get(model, {"in": 0.0, "out": 0.0})
     cost = pin * price["in"] + pout * price["out"]
-    logger.info("%s | in=%d out=%d | ~%.4f ₽", model, pin, pout, cost)  # lazy formatting: %s-str, %d-decimal, %.4f - float
+    logger.info("[%s] %s | in=%d out=%d | ~%.4f ₽", agent, model, pin, pout, cost)  # lazy formatting: %s-str, %d-decimal, %.4f - float
 
 
 def call_llm(
@@ -32,6 +32,7 @@ def call_llm(
     schema: type[T],
     tier: str = "heavy",
     temperature: float = 0.4,
+    agent: str = "?",
 ) -> T:
     """Вызывает LLM с force-JSON, pydantic-валидацией, repair и fallback по тиру."""
 
@@ -66,20 +67,20 @@ def call_llm(
 
             raw = resp.choices[0].message.content or "{}"
             data = json.loads(raw)
-            _log_usage(model, resp)
+            _log_usage(agent, model, resp)
             return schema.model_validate(data)
 
-        except RateLimitError as e:                                                 # error 429
-            logger.error("\nRate limit exceeded for %s: %s\n", model, e)
+        except RateLimitError as e:                                                                     # error 429
+            logger.error("\n[%s] Rate limit exceeded for %s: %s\n", agent, model, e)
             raise e  # Сразу наверх
 
-        except APIStatusError as e:                                                 # errors 401/403/404
-            logger.warning("\nAPI error %s for %s: %s\n", e.status_code, model, e.message)
+        except APIStatusError as e:                                                                     # errors 401/403/404
+            logger.warning("\n[%s] API error %s for %s: %s\n", agent, e.status_code, model, e.message)
             last_error = e
             continue  # К следующей модели
 
         except (json.JSONDecodeError, ValidationError) as e:
-            logger.info("\nParsing error for %s, attempting repair: %s\n", model, e)
+            logger.info("\n[%s] Parsing error for %s, attempting repair: %s\n", agent, model, e)
             last_error = e
             # Попытка repair: повторный вызов с подсказкой
             try:
@@ -104,20 +105,20 @@ def call_llm(
 
                 raw = resp.choices[0].message.content or "{}"
                 data = json.loads(raw)
-                _log_usage(model, resp)
+                _log_usage(agent, model, resp)
                 return schema.model_validate(data)
             except (json.JSONDecodeError, ValidationError) as repair_e:
-                logger.warning("\nRepair не помог для %s: %s\n", model, repair_e)
+                logger.warning("\n[%s] Repair не помог для %s: %s\n", agent, model, repair_e)
                 continue
             except RateLimitError as repair_e:
-                logger.error("\nRate limit при repair для %s: %s\n", model, repair_e)
+                logger.error("\n[%s] Rate limit при repair для %s: %s\n", agent, model, repair_e)
                 raise repair_e
             except Exception as repair_e:
-                logger.warning("\nRepair failed for %s: %s\n", model, repair_e)
+                logger.warning("\n[%s] Repair failed for %s: %s\n", agent, model, repair_e)
                 continue
 
         except Exception as e:
-            logger.error("\nUnexpected error for %s: %s\n", model, e)
+            logger.error("\n[%s] Unexpected error for %s: %s\n", agent, model, e)
             last_error = e
             continue
 
