@@ -31,9 +31,9 @@ PROVIDERS = {
 ```python
 MODEL_TIERS = {
     "light": [
-        {"provider": "proxyapi", "model": "gpt-4.1-nano"},
         {"provider": "proxyapi", "model": "gpt-4.1-mini"},
-        {"provider": "openrouter", "model": "openai/gpt-oss-120b:free"},
+        # {"provider": "proxyapi", "model": "gpt-4.1-mini"},
+        # {"provider": "openrouter", "model": "openai/gpt-oss-120b:free"},
     ],
     "heavy": [
         {"provider": "proxyapi", "model": "gpt-4.1-mini"},
@@ -42,7 +42,7 @@ MODEL_TIERS = {
 }
 
 AGENT_TIER = {
-    "track": "light",
+    "track": "heavy",
     "parser": "heavy",
     "matcher": "heavy",
     "turn": "heavy",

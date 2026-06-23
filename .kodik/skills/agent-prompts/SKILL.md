@@ -26,7 +26,7 @@ languages — список строк вида "Английский B2".
 Нет поля — null/пусто. Верни ТОЛЬКО валидный JSON по схеме Profile.
 Без markdown и текста вне JSON.
 
-## A2 Track (prompts/track.txt) — tier=light
+## A2 Track (prompts/track.txt) — tier=heavy
 Классифицируй карьерный трек по профилю. Треки: Industry (инженерия/прод в компаниях),
 Research (наука/публикации/R&D), Education (преподавание/менторство), Startup (основание/ранний продукт).
 Опирайся ТОЛЬКО на факты профиля. Верни JSON TrackResult {track, confidence, evidence[], runner_up}.

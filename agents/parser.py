@@ -1,4 +1,5 @@
 """A1 Parser — извлекает Profile из текста резюме."""
+
 from core.llm import call_llm
 from core.schemas import Profile
 
@@ -28,4 +29,5 @@ def parse_resume(text: str) -> Profile:
         schema=Profile,
         tier="heavy",
         temperature=0.1,
+        agent="parser"
     )
