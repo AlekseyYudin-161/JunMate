@@ -234,7 +234,9 @@ Startup (основание/ранний продукт).
 
 ### A3 Matcher (prompts/matcher.txt)
 ```
-Вход: Profile + target_role. have/partial/missing навыки относительно роли — подтверждай ТОЛЬКО фактами профиля, не приписывай. Дай recommendations. Верни JSON SkillMatch {target_role, have[], partial[], missing[], recommendations[]}.
+Вход: Profile + target_role. have/partial/missing навыки относительно роли — подтверждай ТОЛЬКО фактами профиля, не приписывай. Дай recommendations.
+Если target_role пуст — определи целевую роль по навыкам и проектам профиля (target_role = наиболее вероятная специализация), и в recommendations отметь, что роль предполагаемая и будет уточнена.
+Верни JSON SkillMatch {target_role, have[], partial[], missing[], recommendations[]}.
 ```
 
 ### A4 Turn-агент (prompts/turn.txt) — ЯДРО
