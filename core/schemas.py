@@ -110,6 +110,13 @@ class TurnResult(BaseModel):
     completeness: float = Field(ge=0, le=1)
     ready_to_render: bool = False
 
+    @field_validator("completeness", mode="before")
+    @classmethod
+    def word_to_number(cls, v):
+        if isinstance(v, str):
+            return {"low": 0.3, "partial": 0.5, "medium": 0.6, "high": 0.9, "full": 1.0}.get(v.strip().lower(), 0.5)
+        return v
+
 
 class ResumeOutput(BaseModel):
     fmt: Literal["hh", "habr_career", "linkedin"] = "hh"
