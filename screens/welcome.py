@@ -3,6 +3,7 @@
 import streamlit as st
 from agents.parser import parse_resume
 from agents.track import classify_track
+from agents.matcher import match_skills
 from core.pdf_in import extract_text
 from core.state import set_profile
 from core.schemas import Profile
@@ -62,24 +63,40 @@ def _analyze_and_store(text: str, progress_bar) -> None:
         # A1: Parser
         profile: Profile = parse_resume(text)
         set_profile(profile)
-        progress_bar.progress(50, text="Классификация трека...")
+        progress_bar.progress(33, text="Классификация трека...")
 
         # A2: Track
         track_result = classify_track(profile)
         st.session_state.track = track_result.model_dump()
-        progress_bar.progress(100, text="Готово!")
+        progress_bar.progress(66, text="Анализ соответствия роли...")
 
+        # A3: Matcher
+        target_role = profile.target_role
+        gap_result = None
+        if target_role:
+            gap_result = match_skills(profile, target_role)
+            st.session_state.gap = gap_result.model_dump()
+        else:
+            st.session_state.gap = None
+
+        progress_bar.progress(100, text="Готово!")
         st.success("Анализ завершён!")
 
-        col1, col2 = st.columns(2)
-        with col1:
-            st.write("**Извлечённый профиль:**")
-            st.json(profile.model_dump())
-        with col2:
-            st.write("**Определённый трек:**")
-            st.json(track_result.model_dump())
+        # Первое сообщение (статичное)
+        st.subheader("Результаты анализа")
 
-        if st.button("Продолжить к диалогу"):
+        track_name = track_result.track
+        st.info(f"**Ваш карьерный трек:** {track_name}")
+
+        if gap_result:
+            st.write(f"**Целевая роль:** {gap_result.target_role}")
+            st.write("**Что у вас уже есть:**", ", ".join(gap_result.have))
+            if gap_result.missing:
+                st.write("**Чего не хватает:**", ", ".join(gap_result.missing))
+        else:
+            st.warning("Целевая роль не определена. Мы уточним её в ходе диалога.")
+
+        if st.button("Начать диалог", type="primary"):
             st.session_state.screen = "chat"
             st.rerun()
     except Exception as e:
