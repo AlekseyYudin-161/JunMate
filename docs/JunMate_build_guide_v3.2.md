@@ -148,12 +148,30 @@ SkillMatch из Profile + target_role, промпт A3 из §7, call_llm с tie
 ```
 
 **TASK 2 — Ядро диалога → резюме → PDF**
+
+TASK 2.1 - Ядро диалога (A4 + merge)
 ```
-Следуй .kodikrules и docs/JunMate_plan_v2.1.md §2,5,5a,7. turn-агент A4 (tier=heavy) → TurnResult. Применяй
-profile_patch через core/merge.py.merge_profile (НЕ перезапись). Чат chat_message/chat_input, история
-в session_state. Лимит вопросов + порог completeness → агент сам предлагает рендер. По «Да»:
-rewriter (A5, hh.ru) → critic (A6) → превью → «Да, хорошо» (pdf_out.py: weasyprint → download_button) /
-«Нет, доделываем» (назад).
+Следуй .kodikrules и docs/JunMate_plan_v2.1.md §2,5,5a,7. Реализуй agents/turn.py: turn-агент A4
+(tier="heavy", agent="turn") по промпту §7 → TurnResult. Применяй profile_patch ТОЛЬКО через
+core/merge.py.merge_profile (НЕ перезапись Profile). Чат на st.chat_message/st.chat_input, история
+диалога и Profile — в st.session_state. Каждый ход показывай обновлённый Profile (временно st.json)
+для проверки merge. Лимит вопросов (например 6) ИЛИ completeness ≥ порог → ready_to_render=true,
+покажи кнопку «Показать резюме» (пока без рендера). Не трогай готовые файлы. Запусти, дай проверить.
+```
+
+TASK 2.2 - Рендер hh.ru (A5) + превью
+```
+Следуй .kodikrules и §5,7. Реализуй agents/rewriter.py: A5 (tier="heavy", agent="rewriter") по промпту §7
+→ ResumeOutput. По кнопке «Показать резюме»: rewriter(Profile+Track+SkillMatch) → превью content_markdown
+через st.markdown + показать warnings. Кнопки «Хорошо» / «Доделать» (назад в диалог). Не трогай готовое.
+```
+
+TASK 2.3 - Critic (A6) + PDF
+```
+Следуй .kodikrules и §5,7. Реализуй agents/critic.py: A6 (tier="heavy", agent="critic") → Critique.
+В цикле рендера: A5 → A6; если grounding_ok=false → ОДИН повторный A5 с fixes. core/pdf_out.py:
+markdown → PDF (weasyprint) → st.download_button. Если weasyprint требует системные пакеты — добавь packages.txt.
+Не трогай готовое.
 ```
 
 **TASK 3 — Critic, стриминг, стоп, сервис**
