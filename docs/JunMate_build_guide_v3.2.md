@@ -162,8 +162,10 @@ core/merge.py.merge_profile (НЕ перезапись Profile). Чат на st.
 TASK 2.2 - Рендер hh.ru (A5) + превью
 ```
 Следуй .kodikrules и §5,7. Реализуй agents/rewriter.py: A5 (tier="heavy", agent="rewriter") по промпту §7
-→ ResumeOutput. По кнопке «Показать резюме»: rewriter(Profile+Track+SkillMatch) → превью content_markdown
-через st.markdown + показать warnings. Кнопки «Хорошо» / «Доделать» (назад в диалог). Не трогай готовое.
+→ ResumeOutput. По кнопке «Показать резюме»: rewriter(Profile + Track + SkillMatch + история диалога)
+→ превью content_markdown через st.markdown + показать warnings. Историю диалога передавай в A5, чтобы он мог восстановить описания проектов/опыта, проговорённые в диалоге, но не попавшие в Profile
+(строго в рамках GROUNDING — только реально сказанное). Кнопки «Хорошо» / «Доделать» (назад в диалог).
+Не трогай готовые файлы (parser, track, matcher, turn, schemas, llm, merge, pdf_in).
 ```
 
 TASK 2.3 - Critic (A6) + PDF
