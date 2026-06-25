@@ -15,25 +15,51 @@ def render_upload_screen() -> None:
     st.subheader("Подготовка резюме под hh.ru")
     st.write("Загрузите резюме в PDF или опишите свой опыт текстом.")
 
-    with st.form("input_form"):
-        col1, col2 = st.columns(2)
-        with col1:
-            pdf_file = st.file_uploader("Загрузить PDF", type=["pdf"])
-        with col2:
-            text_input = st.text_area(
-                "Или опишите себя", 
-                placeholder="Например: Иван, Python-джун, учился в МГТУ...",
-                height=150
-            )
-        submitted = st.form_submit_button("Начать анализ", type="primary")
-
-    if submitted:
+    col1, col2 = st.columns(2)
+    with col1:
+        pdf_file = st.file_uploader("Загрузить PDF", type=["pdf"])
+    with col2:
+        text_input = st.text_area(
+            "Или опишите себя", 
+            placeholder="Например: Иван, Python-джун, учился в МГТУ...",
+            height=150
+        )
+    
+    if st.button("Начать анализ", type="primary"):
         if pdf_file:
             _process_pdf(pdf_file)
         elif text_input.strip():
             _process_text(text_input.strip())
         else:
             st.error("Пожалуйста, загрузите PDF или введите текст.")
+
+    if st.session_state.get("profile"):
+        st.subheader("Результаты анализа")
+        
+        # 1. Трек
+        track_data = st.session_state.get("track")
+        if track_data:
+            st.info(f"**Ваш карьерный трек:** {track_data.get('track')}")
+        
+        # 2. Роль и Gap
+        gap_data = st.session_state.get("gap")
+        profile = st.session_state.get("profile")
+        target_role = profile.get("target_role") if profile else None
+
+        if target_role:
+            st.write(f"**Целевая роль:** {target_role}")
+            if gap_data:
+                if gap_data.get("have"):
+                    st.write("**Что у вас уже есть:**", ", ".join(gap_data["have"]))
+                if gap_data.get("missing"):
+                    st.write("**Чего не хватает:**", ", ".join(gap_data["missing"]))
+        else:
+            st.warning("Целевая роль не определена. Уточним её в ходе диалога.")
+
+        def set_chat_screen():
+            st.session_state.screen = "chat"
+        
+        st.button("Перейти к диалогу →", type="primary", on_click=set_chat_screen)
 
 
 def _process_pdf(pdf_file) -> None:
@@ -72,32 +98,12 @@ def _analyze_and_store(text: str, progress_bar) -> None:
 
         # A3: Matcher
         target_role = profile.target_role
-        gap_result = None
         if target_role:
             gap_result = match_skills(profile, target_role)
             st.session_state.gap = gap_result.model_dump()
         else:
             st.session_state.gap = None
 
-        progress_bar.progress(100, text="Готово!")
-        st.success("Анализ завершён!")
-
-        # Первое сообщение (статичное)
-        st.subheader("Результаты анализа")
-
-        track_name = track_result.track
-        st.info(f"**Ваш карьерный трек:** {track_name}")
-
-        if gap_result:
-            st.write(f"**Целевая роль:** {gap_result.target_role}")
-            st.write("**Что у вас уже есть:**", ", ".join(gap_result.have))
-            if gap_result.missing:
-                st.write("**Чего не хватает:**", ", ".join(gap_result.missing))
-        else:
-            st.warning("Целевая роль не определена. Мы уточним её в ходе диалога.")
-
-        if st.button("Начать диалог", type="primary"):
-            st.session_state.screen = "chat"
-            st.rerun()
+        progress_bar.empty()
     except Exception as e:
         st.error(f"Ошибка парсинга: {e}")
