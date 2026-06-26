@@ -1,7 +1,6 @@
 """Экран чата — диалог с turn-агентом."""
 
 import streamlit as st
-
 from agents.turn import get_next_turn
 from agents.rewriter import rewrite_resume
 from core.merge import merge_profile
@@ -9,7 +8,9 @@ from core.state import get_profile, set_profile
 from core.schemas import SkillMatch
 from core.schemas import Profile
 
-MAX_QUESTIONS = 6
+MAX_QUESTIONS = 6                   # лимит вопросов в первом (основном) проходе диалога
+REFINE_QUESTIONS = 3                # лимит вопросов в режиме добора после «Доделать»
+
 
 def render_chat_screen() -> None:
     """Рендерит экран диалога."""
@@ -23,6 +24,7 @@ def render_chat_screen() -> None:
     # Инициализация первого сообщения, если пусто
     if not st.session_state.messages:
         st.session_state.start_msg_idx = 0
+        st.session_state.refine_mode = False        # стартуем в основном режиме (лимит 6)
         gap_data = st.session_state.get("gap", {})
         missing = gap_data.get("missing", []) if gap_data else []
 
@@ -85,10 +87,12 @@ def render_chat_screen() -> None:
                 st.session_state.ready_to_render = False
                 # Сбрасываем счетчик раунда
                 st.session_state.start_msg_idx = len(st.session_state.messages)
+                st.session_state.refine_mode = True                             # включаем режим добора (лимит REFINE_QUESTIONS=3)
+
                 # Очищаем кэш рерайта
                 if "resume_output" in st.session_state:
                     del st.session_state.resume_output
-                
+
                 # Генерируем новый вопрос от бота сразу, чтобы не ждать ввода пользователя
                 with st.spinner("JunMate ищет, что еще уточнить..."):
                     turn_result = get_next_turn(
@@ -107,22 +111,14 @@ def render_chat_screen() -> None:
             # 1. Сохраняем сообщение пользователя
             st.session_state.messages.append({"role": "user", "content": prompt})
 
-            # Считаем кол-во ответов пользователя в ТЕКУЩЕМ раунде (после последнего сброса)
-            # Для простоты будем считать общее кол-во сообщений после приветствия
-            user_msgs = [m for m in st.session_state.messages if m["role"] == "user"]
-            user_msg_count = len(user_msgs)
-
-            # Если мы нажали "Доделать", мы хотим еще MAX_QUESTIONS
-            # Но проще проверять turn_result.ready_to_render и общий лимит например 12 или 18
-            # Или просто сбрасывать счетчик. 
-            # В текущей реализации user_msg_count считается по всей истории.
-            # Исправим: будем считать сообщения с момента последнего входа в чат или сброса.
-            
             if "start_msg_idx" not in st.session_state:
                 st.session_state.start_msg_idx = 0
-            
+
             current_round_msgs = st.session_state.messages[st.session_state.start_msg_idx:]
             current_user_msg_count = len([m for m in current_round_msgs if m["role"] == "user"])
+
+            # Выбираем лимит в зависимости от режима: основной проход (6) или добор после «Доделать» (3)
+            current_limit = REFINE_QUESTIONS if st.session_state.get("refine_mode") else MAX_QUESTIONS
 
             # 2. Вызываем агента
             with st.spinner("JunMate думает..."):
@@ -140,7 +136,7 @@ def render_chat_screen() -> None:
                 set_profile(Profile.model_validate(new_profile_dict))
 
             # 4. Формируем ответ помощника
-            if current_user_msg_count >= MAX_QUESTIONS:
+            if current_user_msg_count >= current_limit:         # было MAX_QUESTIONS
                 reply = "JunMate собрал достаточно информации. Можно посмотреть предварительное резюме."
                 st.session_state.ready_to_render = True
             else:
