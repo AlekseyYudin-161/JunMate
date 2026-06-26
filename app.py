@@ -2,7 +2,6 @@
 
 import logging
 import streamlit as st
-import weasyprint  # ВРЕМЕННО: проверка системных либ на Cloud
 from core.state import init_state
 
 logging.basicConfig(
