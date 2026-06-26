@@ -161,19 +161,28 @@ core/merge.py.merge_profile (НЕ перезапись Profile). Чат на st.
 
 TASK 2.2 - Рендер hh.ru (A5) + превью
 ```
-Следуй .kodikrules и §5,7. Реализуй agents/rewriter.py: A5 (tier="heavy", agent="rewriter") по промпту §7
+Следуй .kodikrules и docs/JunMate_plan_v2.1.md §5,7. Реализуй agents/rewriter.py: A5 (tier="heavy", agent="rewriter") по промпту §7
 → ResumeOutput. По кнопке «Показать резюме»: rewriter(Profile + Track + SkillMatch + история диалога)
 → превью content_markdown через st.markdown + показать warnings. Историю диалога передавай в A5, чтобы он мог восстановить описания проектов/опыта, проговорённые в диалоге, но не попавшие в Profile
 (строго в рамках GROUNDING — только реально сказанное). Кнопки «Хорошо» / «Доделать» (назад в диалог).
 Не трогай готовые файлы (parser, track, matcher, turn, schemas, llm, merge, pdf_in).
 ```
 
-TASK 2.3 - Critic (A6) + PDF
+TASK 2.3a - Critic (A6) + цикл (без PDF)
 ```
-Следуй .kodikrules и §5,7. Реализуй agents/critic.py: A6 (tier="heavy", agent="critic") → Critique.
-В цикле рендера: A5 → A6; если grounding_ok=false → ОДИН повторный A5 с fixes. core/pdf_out.py:
-markdown → PDF (weasyprint) → st.download_button. Если weasyprint требует системные пакеты — добавь packages.txt.
-Не трогай готовое.
+Следуй .kodikrules и docs/JunMate_plan_v2.1.md §5,7. Реализуй agents/critic.py: A6 (tier="heavy", agent="critic") → Critique по промпту §7. A6 получает на вход Profile + историю диалога + текст резюме (история обязательна, иначе факты, взятые A5 из диалога, ложно помечаются выдумкой).
+Логика цикла в коде (НЕ в промпте): после A5 вызови A6; если grounding_ok=false — сделай РОВНО ОДИН повторный вызов A5, передав ему critique.fixes; больше не повторяй (без петли). 
+Результат A6 (warnings/fixes) покажи пользователю в превью под резюме.
+Не трогай готовые файлы (parser, track, matcher, turn, rewriter, schemas, llm, merge, pdf_in, welcome).
+Сделай, я сам проверю.
+```
+
+TASK 2.3b — PDF (отдельно, после того как A6 заработает)
+```
+Следуй .kodikrules и docs/JunMate_plan_v2.1.md §5,6. Реализуй core/pdf_out.py: функция markdown финального резюме → PDF (через weasyprint, он уже в requirements).
+Markdown → HTML → weasyprint.HTML(string=...).write_pdf(). В HTML/CSS задай font-family со шрифтом, поддерживающим кириллицу (DejaVu Sans или встроенный системный). Подключи в screens/chat.py:
+по кнопке «Хорошо» бери уже готовый текст резюме (res["content_markdown"]) → pdf_out → st.download_button с именем resume.pdf. Не трогай другие готовые файлы (agents/*, core/* кроме нового pdf_out, schemas, llm, merge).
+Сделай, я сам проверю.
 ```
 
 **TASK 3 — Critic, стриминг, стоп, сервис**
