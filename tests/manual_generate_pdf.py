@@ -1,6 +1,13 @@
 """Проверка Генерация PDF из Markdown через fpdf2."""
 
+import logging
 from core.pdf_out import generate_pdf
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)-7s | %(name)s | %(message)s",
+    datefmt="%H:%M:%S",
+)
 
 SAMPLE_OUT = """
 # Желаемая должность
