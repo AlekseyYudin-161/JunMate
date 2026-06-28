@@ -244,16 +244,6 @@ tests/test_pdf_in.py — тестируй core.pdf_in.extract_text:
 Сделай, дай инструкцию по запуску. Я сам проверю.
 ```
 
-
-
-
-
-```
-Следуй .kodikrules. eval/run_eval.py (accuracy трека + grounding/completeness через Critic; вывести
-сравнение моделей по тирам, чтобы при необходимости поменять порядок в MODEL_TIERS). pytest на pdf_in,
-merge и схемы. README (проблема, запуск, архитектура, переменные, ограничения, roadmap).
-```
-
 ---
 
 ## 7. График (15.06 → дедлайн)
