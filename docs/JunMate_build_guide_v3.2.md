@@ -179,9 +179,11 @@ TASK 2.3a - Critic (A6) + цикл (без PDF)
 
 TASK 2.3b — PDF (отдельно, после того как A6 заработает)
 ```
-Следуй .kodikrules и docs/JunMate_plan_v2.1.md §5,6. Реализуй core/pdf_out.py: функция markdown финального резюме → PDF (через weasyprint, он уже в requirements).
-Markdown → HTML → weasyprint.HTML(string=...).write_pdf(). В HTML/CSS задай font-family со шрифтом, поддерживающим кириллицу (DejaVu Sans или встроенный системный). Подключи в screens/chat.py:
-по кнопке «Хорошо» бери уже готовый текст резюме (res["content_markdown"]) → pdf_out → st.download_button с именем resume.pdf. Не трогай другие готовые файлы (agents/*, core/* кроме нового pdf_out, schemas, llm, merge).
+Следуй .kodikrules и docs/JunMate_plan_v2.1.md §5,6. Реализуй core/pdf_out.py через библиотеку fpdf2 (weasyprint удалён — не работает на Streamlit Cloud, используем fpdf2).
+Функция принимает markdown-текст финального резюме (res["content_markdown"]) и рендерит PDF: парсит строки markdown — заголовки (# / ##) делает крупнее, буллеты (• / - / *) выводит с отступом, обычный текст абзацами. ОБЯЗАТЕЛЬНО подключи кириллический шрифт из репозитория:
+pdf.add_font("DejaVu", "", "fonts/DejaVuSans.ttf") и pdf.set_font("DejaVu") — иначе русский текст будет квадратиками. Используй multi_cell для переноса длинных строк.
+Подключи в screens/chat.py: по кнопке «Хорошо» вызови pdf_out(res["content_markdown"]) и отдай через st.download_button с именем resume.pdf (mime "application/pdf").
+Не трогай другие готовые файлы (agents/*, core/* кроме нового pdf_out, schemas, llm, merge, welcome).
 Сделай, я сам проверю.
 ```
 

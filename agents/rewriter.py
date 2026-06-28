@@ -37,7 +37,7 @@ def rewrite_resume(
     if fixes:
         user_content += f"\n\nИсправь следующие ошибки, найденные критиком:\n{fixes}"
 
-    return call_llm(        
+    return call_llm(
         system=PROMPT,
         user=user_content,
         schema=ResumeOutput,
