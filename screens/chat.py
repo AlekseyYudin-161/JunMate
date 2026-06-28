@@ -1,15 +1,32 @@
 """Экран чата — диалог с turn-агентом."""
 
+import re
+from datetime import datetime
 import streamlit as st
 from agents.turn import get_next_turn
 from agents.rewriter import rewrite_resume
+from agents.critic import critique_resume
 from core.merge import merge_profile
+from core.pdf_out import generate_pdf
 from core.state import get_profile, set_profile
 from core.schemas import SkillMatch
 from core.schemas import Profile
 
 MAX_QUESTIONS = 6                   # лимит вопросов в первом (основном) проходе диалога
 REFINE_QUESTIONS = 3                # лимит вопросов в режиме добора после «Доделать»
+
+
+def _safe_filename(profile) -> str:
+    """
+    Создает корректное имя PDF: 
+    ФИО_роль_CV_дата.pdf, без недопустимых в имени файла символов.
+    """
+    name = profile.full_name or "resume"
+    role = profile.target_role or "CV"
+    date = datetime.now().strftime("%d-%m-%Y")
+    raw = f"{name}_{role}_CV_{date}.pdf"
+    raw = re.sub(r'[/\\:*?"<>|]', "", raw)
+    return raw.replace(" ", "_")
 
 
 def render_chat_screen() -> None:
@@ -24,7 +41,7 @@ def render_chat_screen() -> None:
     # Инициализация первого сообщения, если пусто
     if not st.session_state.messages:
         st.session_state.start_msg_idx = 0
-        st.session_state.refine_mode = False        # стартуем в основном режиме (лимит 6)
+        st.session_state.refine_mode = False                        # стартуем в основном режиме (лимит 6)
         gap_data = st.session_state.get("gap", {})
         missing = gap_data.get("missing", []) if gap_data else []
 
@@ -61,37 +78,81 @@ def render_chat_screen() -> None:
                 gap_data = st.session_state.get("gap")
                 gap = SkillMatch.model_validate(gap_data) if gap_data else None
 
+                # Раунд 1: A5
                 resume_output = rewrite_resume(
                     profile=profile,
                     track=track,
                     gap=gap,
                     history=st.session_state.messages
                 )
+
+                # Раунд 2: A6 (Critic)
+                with st.spinner("Проверяем на соответствие фактам..."):
+                    critique = critique_resume(
+                        profile=profile,
+                        history=st.session_state.messages,
+                        content_markdown=resume_output.content_markdown
+                    )
+                    st.session_state.critique = critique.model_dump()
+
+                # Раунд 3: Повторный A5, если есть галлюцинации
+                if not critique.grounding_ok:
+                    with st.spinner("Исправляем замечания критика..."):
+                        resume_output = rewrite_resume(
+                            profile=profile,
+                            track=track,
+                            gap=gap,
+                            history=st.session_state.messages,
+                            fixes=critique.fixes
+                        )
+
                 st.session_state.resume_output = resume_output.model_dump()
 
         res = st.session_state.resume_output
+        crit = st.session_state.get("critique")
+
         st.markdown(res["content_markdown"])
+
+        # Отображение замечаний критика
+        if crit and not crit.get("grounding_ok"):
+            with st.expander("🔍 Замечания критика (были учтены при перегенерации)", expanded=False):
+                if crit.get("fabricated_claims"):
+                    st.error("**Найдены неподтвержденные факты:**")
+                    for claim in crit["fabricated_claims"]:
+                        st.write(f"• {claim}")
+                if crit.get("fixes"):
+                    st.warning("**Рекомендованные исправления:**")
+                    for fix in crit["fixes"]:
+                        st.write(f"• {fix}")
 
         if res.get("warnings"):
             with st.expander("⚠️ Рекомендации по улучшению"):
                 for w in res["warnings"]:
                     st.write(f"• {w}")
-
         col1, col2 = st.columns(2)
+
         with col1:
-            if st.button("✅ Хорошо", type="primary", use_container_width=True):
-                st.success("Отлично! В следующей задаче мы добавим скачивание PDF.")
+            pdf_bytes = generate_pdf(res["content_markdown"])
+            st.download_button(
+                label="📥 Хорошо, Скачать PDF",
+                data=pdf_bytes,
+                file_name=_safe_filename(profile),
+                mime="application/pdf",
+                use_container_width=True,
+                type="primary"
+            )
         with col2:
             if st.button("✏️ Доделать", use_container_width=True):
                 st.session_state.show_preview = False
                 st.session_state.ready_to_render = False
+                st.session_state.refine_mode = True                 # ВКЛючить режим добора (лимит REFINE_QUESTIONS=3)
                 # Сбрасываем счетчик раунда
                 st.session_state.start_msg_idx = len(st.session_state.messages)
-                st.session_state.refine_mode = True                             # включаем режим добора (лимит REFINE_QUESTIONS=3)
-
-                # Очищаем кэш рерайта
+                # Очищаем кэш рерайта и критика
                 if "resume_output" in st.session_state:
                     del st.session_state.resume_output
+                if "critique" in st.session_state:
+                    del st.session_state.critique
 
                 # Генерируем новый вопрос от бота сразу, чтобы не ждать ввода пользователя
                 with st.spinner("JunMate ищет, что еще уточнить..."):
