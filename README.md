@@ -1,7 +1,8 @@
 > Required Notice: Copyright 2026 Aleksey Yudin (https://github.com/AlekseyYudin-161)
 
-
 # JunMate — разговорный ассистент карьерного старта для IT-джунов под российский рынок труда. 
+
+[![CI](https://github.com/AlekseyYudin-161/JunMate/actions/workflows/ci.yml/badge.svg)](https://github.com/AlekseyYudin-161/JunMate/actions/workflows/ci.yml)
 
 Пользователь загружает резюме (а если его нет — описывает себя текстом). JunMate `в диалоге` распознаёт карьерный трек, делает честный анализ пробелов под целевую роль и дозаполняет резюме под формат `hh.ru` — строго по фактам пользователя, без выдуманного опыта. На выходе — готовое к скачиванию PDF-резюме и подборка курсов (Stepik/ODS/Karpov) под выявленные пробелы. 
 
