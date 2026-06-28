@@ -187,7 +187,7 @@ pdf.add_font("DejaVu", "", "fonts/DejaVuSans.ttf") и pdf.set_font("DejaVu") —
 Сделай, я сам проверю.
 ```
 
-**TASK 3 — Critic, стриминг, стоп, сервис**
+**TASK 3 — UI/UX, кнопки feedback/Сброс диалога**
 ```
 Следуй .kodikrules. Доработки UI в screens/chat.py и app.py. НЕ трогай agents/*, core/*, логику диалога/рендера, рендер резюме, критика, PDF.
 1. Убери кнопку «Сбросить всё» из app.py (sidebar).
