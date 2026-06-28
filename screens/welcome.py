@@ -15,17 +15,41 @@ def render_upload_screen() -> None:
     st.subheader("Подготовка резюме под hh.ru")
     st.write("Загрузите резюме в PDF или опишите свой опыт текстом.")
 
+    # Версия ключей виджетов — инкремент сбрасывает file_uploader/text_area (см. «Очистить/Загрузить другое резюме»)
+    if "upload_version" not in st.session_state:
+        st.session_state.upload_version = 0
+    ver = st.session_state.upload_version
+
     col1, col2 = st.columns(2)
     with col1:
-        pdf_file = st.file_uploader("Загрузить PDF", type=["pdf"])
+        # key с версией: смена версии = новый чистый виджет
+        pdf_file = st.file_uploader("Загрузить PDF", type=["pdf"], key=f"pdf_upload_{ver}")
     with col2:
         text_input = st.text_area(
             "Или опишите себя", 
             placeholder="Например: Иван, Python-джун, учился в МГТУ...",
-            height=150
+            height=150,
+            key=f"text_input_{ver}"                       # key с версией для сброса
         )
-    
-    if st.button("Начать анализ", type="primary"):
+
+    # Кнопки разведены по краям (распорка посередине), чтобы юзер не промахнулся
+    btn_col1, _, btn_col2 = st.columns([2, 2, 3])
+    with btn_col1:
+        start_clicked = st.button("Начать анализ", type="primary", use_container_width=True)
+    with btn_col2:
+        clear_clicked = st.button(
+            "Очистить / Загрузить другое резюме",          # понятнее, чем просто «Очистить»
+            type="secondary", use_container_width=True
+        )
+
+    # Очистка: сброс результатов анализа + смена версии ключей (очищает загрузку/текст)
+    if clear_clicked:
+        for k in ("profile", "track", "gap"):
+            st.session_state.pop(k, None)                 # убрать результаты анализа, если есть
+        st.session_state.upload_version += 1              # новый ключ → пустые file_uploader/text_area
+        st.rerun()
+
+    if start_clicked:
         if pdf_file:
             _process_pdf(pdf_file)
         elif text_input.strip():
@@ -35,12 +59,12 @@ def render_upload_screen() -> None:
 
     if st.session_state.get("profile"):
         st.subheader("Результаты анализа")
-        
+
         # 1. Трек
         track_data = st.session_state.get("track")
         if track_data:
             st.info(f"**Ваш карьерный трек:** {track_data.get('track')}")
-        
+
         # 2. Роль и Gap
         gap_data = st.session_state.get("gap")
         profile = st.session_state.get("profile")
@@ -58,7 +82,7 @@ def render_upload_screen() -> None:
 
         def set_chat_screen():
             st.session_state.screen = "chat"
-        
+
         st.button("Перейти к диалогу →", type="primary", on_click=set_chat_screen)
 
 
