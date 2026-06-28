@@ -216,6 +216,38 @@ courses.json НЕ выдумывай — пустой массив + запис�
 ```
 
 **TASK 5 — Качество и финал**
+
+TASK 5a - Unit-tests
+```
+Следуй .kodikrules. Создай детерминированные тесты (pytest) — БЕЗ вызовов LLM/API.
+НЕ трогай логику в agents/, core/ — только добавь файлы в tests/.
+
+tests/test_merge.py — тестируй core.merge.merge_profile:
+- test_add_skill_no_overwrite: в профиль со skills=["Python"] патч skills=["Docker"] →
+  результат содержит и "Python", и "Docker" (не затёрся).
+- test_update_project_keeps_bullets: профиль с проектом, у которого 2 bullets; патч обновляет
+  тот же проект с 3 bullets → в результате у проекта 3 bullets (полная замена элемента, не потеря).
+- test_contacts_preserved: профиль с contacts={"email":"a@b.ru","phone":"123"}; патч
+  contacts={"email":"a@b.ru","phone":"123","github":"url"} → email и phone на месте, github добавлен.
+- test_empty_patch: пустой патч {} → профиль не изменился.
+
+tests/test_pdf_out.py — тестируй core.pdf_out.generate_pdf:
+- test_returns_valid_pdf: generate_pdf("# Заголовок\nтекст") возвращает bytes, начинающиеся с b"%PDF".
+- test_separator_skipped: в выводе для "---" не падает и не крашится (markdown-разделитель).
+- test_cyrillic_ok: generate_pdf с кириллицей не кидает исключение, возвращает непустые байты.
+
+tests/test_pdf_in.py — тестируй core.pdf_in.extract_text:
+- test_extract_simple: создай минимальный PDF в фикстуре (через fpdf2), извлеки текст,
+  проверь, что вернулась непустая строка.
+- test_broken_pdf: на байтах-не-PDF (b"not a pdf") extract_text кидает понятную ошибку (ValueError).
+
+Сделай, дай инструкцию по запуску. Я сам проверю.
+```
+
+
+
+
+
 ```
 Следуй .kodikrules. eval/run_eval.py (accuracy трека + grounding/completeness через Critic; вывести
 сравнение моделей по тирам, чтобы при необходимости поменять порядок в MODEL_TIERS). pytest на pdf_in,
