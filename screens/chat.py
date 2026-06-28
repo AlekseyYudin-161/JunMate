@@ -183,7 +183,7 @@ def render_chat_screen() -> None:
     # Поле ввода
     if not ready_to_render:
         # Кнопки управления над чатом
-        c1, c2, c3 = st.columns([1, 4, 2])
+        c1, _, c3 = st.columns([1, 4, 2])
         with c1:
             with st.popover("➕"):
                 st.link_button("🐞 Сообщить о баге", "https://forms.gle/R4FPFTnoy6sjt7Mj7", use_container_width=True)
