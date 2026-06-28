@@ -29,6 +29,20 @@ def _safe_filename(profile) -> str:
     return raw.replace(" ", "_")
 
 
+@st.dialog("Сбросить диалог")
+def reset_dialog():
+    st.write("Сбросить диалог? Улучшение вашего резюме сбросится и диалог начнётся заново. Это действие необратимо.")
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Отмена", type="secondary", use_container_width=True):
+            st.rerun()
+    with col2:
+        if st.button("Сбросить", type="primary", use_container_width=True):
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
+            st.rerun()
+
+
 def render_chat_screen() -> None:
     """Рендерит экран диалога."""
     st.header("💬 Диалог с JunMate")
@@ -168,6 +182,17 @@ def render_chat_screen() -> None:
 
     # Поле ввода
     if not ready_to_render:
+        # Кнопки управления над чатом
+        c1, c2, c3 = st.columns([1, 4, 2])
+        with c1:
+            with st.popover("➕"):
+                st.link_button("🐞 Сообщить о баге", "https://forms.gle/R4FPFTnoy6sjt7Mj7", use_container_width=True)
+                st.link_button("💬 Обратная связь", "https://forms.gle/7oikcFZEs5QupgJC9", use_container_width=True)
+
+        with c3:
+            if st.button("🗑️ Сбросить диалог", type="primary", use_container_width=True):
+                reset_dialog()
+
         if prompt := st.chat_input("Ваш ответ..."):
             # 1. Сохраняем сообщение пользователя
             st.session_state.messages.append({"role": "user", "content": prompt})
