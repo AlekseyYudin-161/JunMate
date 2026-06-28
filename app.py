@@ -15,12 +15,6 @@ def main() -> None:
     st.set_page_config(page_title="JunMate", page_icon="🚀", layout="centered")
     init_state()
 
-    # закомментировать на проде
-    if st.sidebar.button("Сбросить всё"):
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
-        st.rerun()
-    # ----------------------------------------------
     screen = st.session_state.get("screen", "welcome")
 
     if screen == "welcome":
