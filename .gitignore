@@ -11,8 +11,6 @@ venv/
 .idea/
 .vscode/
 .pytest_cache/
-logs/
-tmp/
-wheelhouse/
+.coverage
 
 .streamlit/secrets.toml
