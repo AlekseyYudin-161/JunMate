@@ -11,9 +11,7 @@ from core.pdf_out import generate_pdf
 from core.state import get_profile, set_profile
 from core.schemas import SkillMatch
 from core.schemas import Profile
-
-MAX_QUESTIONS = 6                   # лимит вопросов в первом (основном) проходе диалога
-REFINE_QUESTIONS = 3                # лимит вопросов в режиме добора после «Доделать»
+from core.config import MAX_QUESTIONS, REFINE_QUESTIONS
 
 
 def _safe_filename(profile) -> str:
