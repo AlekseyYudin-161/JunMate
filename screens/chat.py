@@ -184,8 +184,8 @@ def render_chat_screen() -> None:
         c1, _, c3 = st.columns([1, 4, 2])
         with c1:
             with st.popover("➕"):
-                st.link_button("🐞 Сообщить о баге", "https://forms.gle/R4FPFTnoy6sjt7Mj7", use_container_width=True)
-                st.link_button("💬 Обратная связь", "https://forms.gle/7oikcFZEs5QupgJC9", use_container_width=True)
+                st.link_button("🐞 Сообщить о баге", "https://forms.gle/TkxwT93PxLVuNuyd6", use_container_width=True)
+                st.link_button("💬 Обратная связь", "https://forms.gle/vVqcybyPqUbvMCDY7", use_container_width=True)
 
         with c3:
             if st.button("🗑️ Сбросить диалог", type="primary", use_container_width=True):
