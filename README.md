@@ -3,7 +3,7 @@
 [![CI](https://github.com/AlekseyYudin-161/JunMate/actions/workflows/ci.yml/badge.svg)](https://github.com/AlekseyYudin-161/JunMate/actions/workflows/ci.yml)
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Streamlit-FF4B4B?logo=streamlit)](https://junmate-resumecopilot.streamlit.app)
 
-# JunMate — разговорный ассистент карьерного старта для IT-джунов под российский рынок труда.
+# JunMate — разговорный ассистент исправления резюме для IT-джунов под российский рынок труда.
 
 Пользователь загружает резюме (а если его нет — описывает себя текстом). JunMate `в диалоге` распознаёт карьерный трек, делает честный анализ пробелов под целевую роль и дозаполняет резюме под формат `hh.ru` — строго по фактам пользователя, без выдуманного опыта. На выходе — готовое к скачиванию PDF-резюме и подборка курсов (Stepik/ODS/Karpov) под выявленные пробелы. 
 
