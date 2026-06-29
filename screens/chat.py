@@ -232,7 +232,8 @@ def render_chat_screen() -> None:
 
             st.session_state.messages.append({"role": "assistant", "content": reply})
             st.rerun()
+
     # Сайдбар с текущим Profile для проверки merge
-    with st.sidebar:
-        st.subheader("Текущий Profile (Debug)")
-        st.json(get_profile().model_dump())
+    # with st.sidebar:
+    #     st.subheader("Текущий Profile (Debug)")
+    #     st.json(get_profile().model_dump())
