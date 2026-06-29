@@ -3,7 +3,8 @@
 from core.llm import call_llm
 from core.schemas import Profile, TrackResult
 
-PROMPT = """Классифицируй карьерный трек по профилю.
+PROMPT = """
+Классифицируй карьерный трек по профилю.
 Треки: Industry (инженерия/прод в компаниях),
 Research (наука/публикации/R&D), 
 Education (преподавание/менторство), 

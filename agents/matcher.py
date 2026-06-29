@@ -3,9 +3,11 @@
 from core.llm import call_llm
 from core.schemas import Profile, SkillMatch
 
-PROMPT = """Вход: Profile + target_role. have/partial/missing навыки относительно роли —
+PROMPT = """
+Вход: Profile + target_role. have/partial/missing навыки относительно роли —
 подтверждай ТОЛЬКО фактами профиля, не приписывай. Дай recommendations. 
-Верни JSON SkillMatch {target_role, have[], partial[], missing[], recommendations[]}."""
+Верни JSON SkillMatch {target_role, have[], partial[], missing[], recommendations[]}.
+"""
 
 def match_skills(profile: Profile, target_role: str) -> SkillMatch:
     """Анализирует соответствие навыков профиля целевой роли."""
