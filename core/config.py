@@ -6,6 +6,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+MAX_QUESTIONS = 8                                          # основных вопросов в первом проходе
+REFINE_QUESTIONS = 4                                       # вопросов добора после «Доделать»
+
 PROVIDERS = {
     "proxyapi": {
         "base_url": "https://api.proxyapi.ru/openai/v1",
