@@ -244,6 +244,49 @@ tests/test_pdf_in.py — тестируй core.pdf_in.extract_text:
 Сделай, дай инструкцию по запуску. Я сам проверю.
 ```
 
+TASK 5b - eval agents (LLM)
+```
+Следуй .kodikrules. Создай eval/run_eval.py — скрипт оценки качества (запускается вручную,
+НЕ в CI, требует API-ключа). НЕ трогай agents/, core/ — только читай и вызывай.
+
+Структура скрипта:
+
+1. ЗАГРУЗКА: прочитай eval/labels.json (список {id, file, true_track}).
+   Для каждого прочитай текст резюме из eval/dataset/{file}.
+
+2. ШАГ 3 — ACCURACY ТРЕКА (2 прогона каждого резюме):
+   Для каждого резюме дважды:
+     - profile = parse_resume(text)        # A1
+     - track_result = classify_track(profile)  # A2
+     - сравни track_result.track с true_track
+   Замеряй time.time() вокруг каждого вызова (для шага 5).
+   Считай: accuracy по каждому прогону (верные/всего), стабильность (совпали ли 2 прогона).
+   Печатай таблицу: id | true_track | прогон1 | прогон2 | совпало с эталоном.
+   Выведи итоговую accuracy и confusion (какой трек с каким путается).
+
+3. ШАГ 4 — GROUNDING (только 3 резюме: ivan, dudii, ilia — по id):
+   Для каждого:
+     - profile = parse_resume(text)           # A1 (history пустая — без диалога)
+     - resume = rewrite_resume(profile, track, gap=None, history=[])  # A5
+     - critique = critique_resume(profile, history=[], content_markdown=resume.content_markdown)  # A6
+     - запиши critique.grounding_ok и critique.fabricated_claims
+   Печатай: id | grounding_ok | fabricated_claims.
+   Выведи долю grounding_ok=true.
+
+4. ШАГ 5 — LATENCY (попутно, из замеров time в шаге 2-3):
+   Печатай среднее время на агента (A1, A2, A5, A6).
+   Если core/llm возвращает usage-токены — собери и их; если нет, только время.
+
+5. Все результаты печатай в консоль структурированно (таблицы текстом).
+   Оберни каждый вызов агента в try/except, чтобы один сбой не уронил весь прогон.
+
+6. В САМОМ КОНЦЕ напечатай отдельный блок "=== ИТОГ ДЛЯ EVAL_RESULTS ===" с агрегатами:
+   accuracy трека (X/N = %), доля стабильных (2 прогона совпали), grounding-rate (M/3),
+   средняя latency по агентам. Этот блок — для копирования в EVAL_RESULTS.md.
+
+НЕ запускай скрипт (он тратит API-баланс) — только создай, я сам проверю.
+```
+
 ---
 
 ## 7. График (15.06 → дедлайн)
