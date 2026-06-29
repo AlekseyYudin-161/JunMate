@@ -1,0 +1,12 @@
+[
+{"id": "biziaeva", "file": "biziaeva_web_analist.txt", "true_track": "Industry"},
+{"id": "guskov", "file": "guskov_chemistry_ml.txt", "true_track": "Industry"},
+{"id": "ilia", "file": "ilia_ai_engineer.txt", "true_track": "Industry"},
+{"id": "ivan", "file": "ivan_python_dev.txt", "true_track": "Industry"},
+{"id": "klivov", "file": "klivov_ds_jun.txt", "true_track": "Industry"},
+{"id": "dudii", "file": "dudii_bioinformatic.txt", "true_track": "Research"},
+{"id": "ivanov", "file": "ivanov_education.txt", "true_track": "Research"},
+{"id": "sokolova", "file": "sokolova_education.txt", "true_track": "Education"},
+{"id": "kuznetsov", "file": "kuznetsov_startup.txt", "true_track": "Startup"},
+{"id": "petrov", "file": "petrov_statup.txt", "true_track": "Startup"}
+]
