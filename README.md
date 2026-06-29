@@ -1,8 +1,9 @@
 > Required Notice: Copyright 2026 Aleksey Yudin (https://github.com/AlekseyYudin-161)
 
-# JunMate — разговорный ассистент карьерного старта для IT-джунов под российский рынок труда. 
-
 [![CI](https://github.com/AlekseyYudin-161/JunMate/actions/workflows/ci.yml/badge.svg)](https://github.com/AlekseyYudin-161/JunMate/actions/workflows/ci.yml)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Streamlit-FF4B4B?logo=streamlit)](https://junmate-resumecopilot.streamlit.app)
+
+# JunMate — разговорный ассистент карьерного старта для IT-джунов под российский рынок труда.
 
 Пользователь загружает резюме (а если его нет — описывает себя текстом). JunMate `в диалоге` распознаёт карьерный трек, делает честный анализ пробелов под целевую роль и дозаполняет резюме под формат `hh.ru` — строго по фактам пользователя, без выдуманного опыта. На выходе — готовое к скачиванию PDF-резюме и подборка курсов (Stepik/ODS/Karpov) под выявленные пробелы. 
 
@@ -48,13 +49,14 @@ streamlit run app.py
 
 Проект в активной разработке (трек Student, SOLO разработчик).
 
-### Реализовано 1/4 проекта (TASK 0 - TASK 1.2): 
+### Реализовано 4/5 проекта: 
 
 - ✅ Каркас приложения, провайдер-агностичный LLM-клиент (force-JSON, repair, fallback по тирам, учёт токенов/стоимости).
 - ✅ Приём резюме (PDF/текст), парсинг (A1), классификация трека (A2).
-
-### Еще реализовать (TASK 1.3 - TASK 5)
 - gap-анализ (A3). Проверено на реальных hh.ru-резюме.
 - Ядро диалога (A4), рендер hh.ru (A5) и PDF — целевой MVP.
-- Критик (A6), курсы под пробелы, eval.
+- Критик (A6)
+
+### Еще реализовать (TASK 1.3 - TASK 5)
+- курсы под пробелы, eval.
 
