@@ -1,0 +1,1 @@
+Иван Петров. Python-разработчик, 2 года практики и пет проектов. Стек: Python, Django, Flask, PostgreSQL, Docker.

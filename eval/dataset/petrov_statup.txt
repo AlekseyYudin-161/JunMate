@@ -1,0 +1,30 @@
+Петров Пётр
++7 (999) 111-11-11 | petrov@startup.ru | github.com/petrov-dev | tg: @petrov_dev
+
+Цель: позиция Junior ML Engineer / Backend-разработчик в продуктовом стартапе.
+
+Образование
+2021–2025 — Бакалавриат, МГТУ им. Баумана, ИУ-5 (Системы обработки информации). GPA: 7.8/10.
+Курсовая: «Автоматическая генерация описаний товаров для маркетплейсов на основе LLM». Стек: FastAPI, LangChain, OpenAI API.
+
+Опыт работы
+2024–н.в. — ML Engineer (part-time), стартап ShopGenie (призёр акселератора ФРИИ).
+• Разработка MVP генератора карточек товаров: FastAPI backend, интеграция GPT-4 + image captioning.
+• Оптимизация latency: кэширование (Redis), async-обработка очереди (Celery). Снижение среднего времени ответа с 4.2с до 1.1с.
+• Подготовка демо для инвесторов: 150 активных пользователей, 12% конверсия в платную подписку.
+
+2023–2024 — Backend-разработчик, студенческий проект UniHub.
+• Разработка REST API для платформы обмена учебными материалами (FastAPI, PostgreSQL, SQLAlchemy).
+• Деплой на Yandex Cloud (Docker, Nginx), настройка CI/CD (GitHub Actions).
+
+Проекты
+• ResumeFix AI (Python, Streamlit, LangChain, OpenAI API) — Telegram-бот + веб-интерфейс для исправления IT-резюме. 200+ пользователей, 4.8★. Код: github.com/petrov-dev/resumefix.
+• Hackathon «Цифровой прорыв» (2024, 2-е место) — AI-ассистент для HR: автоматический скрининг резюме + генерация вопросов для интервью. Стек: Python, FastAPI, React, PostgreSQL.
+• PriceTracker MVP (Python, Scrapy, Telegram Bot API) — бот для отслеживания цен на маркетплейсах. 500+ подписчиков, монетизация через реферальные ссылки.
+
+Навыки
+Python, FastAPI, SQLAlchemy, PostgreSQL, Redis, Docker, Git, Linux, React (базово), LangChain, OpenAI API, Yandex Cloud.
+
+Достижения
+• ФРИИ Акселератор, весна 2024 (грант 1M ₽).
+• Хакатон «Лидеры цифровой трансформации» (2023) — 3-е место.
