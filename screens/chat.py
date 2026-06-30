@@ -27,6 +27,22 @@ def _safe_filename(profile) -> str:
     return raw.replace(" ", "_")
 
 
+# инлайн-очистка session_state в теле экрана ломает рендер, а @st.dialog изолирует
+# сброс состояния → только через модалку/изолированный контекст, не инлайн.
+@st.dialog("Вернуться на главную")
+def return_home_dialog():
+    st.write("Возвращаемся на стартовую страницу, ваш диалог сбросится.")
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Отмена", type="secondary", use_container_width=True):
+            st.rerun()
+    with col2:
+        if st.button("Да, возвращаемся", type="primary", use_container_width=True):
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
+            st.rerun()
+
+
 @st.dialog("Сбросить диалог")
 def reset_dialog():
     st.write("Сбросить диалог? Улучшение вашего резюме сбросится и диалог начнётся заново. Это действие необратимо.")
@@ -157,7 +173,7 @@ def render_chat_screen() -> None:
             if st.button("✏️ Доделать", use_container_width=True):
                 st.session_state.show_preview = False
                 st.session_state.ready_to_render = False
-                st.session_state.refine_mode = True                 # ВКЛючить режим добора (лимит REFINE_QUESTIONS=3)
+                st.session_state.refine_mode = True                 # ВКЛючить режим добора (REFINE_QUESTIONS)
                 # Сбрасываем счетчик раунда
                 st.session_state.start_msg_idx = len(st.session_state.messages)
                 # Очищаем кэш рерайта и критика
@@ -177,6 +193,13 @@ def render_chat_screen() -> None:
                     )
                     st.session_state.messages.append({"role": "assistant", "content": turn_result.reply})
                 st.rerun()
+
+        st.write("")
+        st.write("")
+        _, col_new, _ = st.columns([1, 2, 1])
+        with col_new:
+            if st.button("🆕 Новое резюме", type="secondary", use_container_width=True):
+                return_home_dialog()
 
     # Поле ввода
     if not ready_to_render:
