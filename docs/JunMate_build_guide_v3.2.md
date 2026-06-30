@@ -88,7 +88,7 @@ AGENT_TIER = {
 
 Streamlit Community Cloud: код в Kodik → push в GitHub → автодеплой. `.gitignore` исключает `.env` и
 `.streamlit/secrets.toml`. Локально — `.env`; на Cloud — Secrets. `core/config.py` читает st.secrets
-первым, фоллбэк на .env. Free-tier засыпает — перед демо прогрей.
+первым, фоллбэк на .env.
 
 ---
 
@@ -98,10 +98,10 @@ Streamlit Community Cloud: код в Kodik → push в GitHub → автодеп
 
 ---
 
-## 5. Как давать таски Kodik
+## 5. Таски передаются агенту Kodik
 
-Прикрепи docs/JunMate_plan_v2.1.md + этот файл; `.kodikrules` — в корень репо. Таски — по одному, по порядку §6.
-После каждого: запусти → проверь → коммит → push. «sub_agent» — точечно (ресёрч/анализ).
+Таски — по одному, по порядку §6.
+После каждого: запуск → проверка → ручная корректировка → проверка → коммит → push. «sub_agent» — точечно (ресёрч/анализ).
 
 ---
 
@@ -187,7 +187,7 @@ pdf.add_font("DejaVu", "", "fonts/DejaVuSans.ttf") и pdf.set_font("DejaVu") —
 Сделай, я сам проверю.
 ```
 
-**TASK 3 — UI/UX, кнопки feedback/Сброс диалога**
+**TASK 3 — UI/UX, кнопки feedback/Сброс диалога (реализация стриминга опционально)**
 ```
 Следуй .kodikrules. Доработки UI в screens/chat.py и app.py. НЕ трогай agents/*, core/*, логику диалога/рендера, рендер резюме, критика, PDF.
 1. Убери кнопку «Сбросить всё» из app.py (sidebar).
@@ -208,7 +208,7 @@ pdf.add_font("DejaVu", "", "fonts/DejaVuSans.ttf") и pdf.set_font("DejaVu") —
 Сделай, я сам проверю.
 ```
 
-**TASK 4 — Курсы и авторизация (режется первой)**
+**TASK 4 — Курсы и авторизация (режется первой. опционально и на будущее развитие проекта)**
 ```
 Следуй .kodikrules. pages/courses.py: читает data/courses.json (наполняю вручную), фильтр по треку/роли.
 courses.json НЕ выдумывай — пустой массив + запись-пример в .example. Затем авторизация
@@ -292,7 +292,7 @@ TASK 5b - eval agents (LLM)
 ## 7. График (15.06 → дедлайн)
 
 | Фаза | Таск | Результат |
-|---|---|---|---|
+|---|---|---|
 | 0 | TASK 0 | каркас + «ok» на Streamlit Cloud (URL) |
 | 1 | TASK 1 | резюме/текст → трек + gap + первое сообщение |
 | 2 | TASK 2 | диалог → резюме hh.ru → PDF. **← MVP** |

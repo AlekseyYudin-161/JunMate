@@ -3,11 +3,14 @@
 [![CI](https://github.com/AlekseyYudin-161/JunMate/actions/workflows/ci.yml/badge.svg)](https://github.com/AlekseyYudin-161/JunMate/actions/workflows/ci.yml)
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Streamlit-FF4B4B?logo=streamlit)](https://junmate-resumecopilot.streamlit.app)
 
-# JunMate — разговорный ассистент исправления резюме для IT-джунов под российский рынок труда.
+# JunMate — разговорный ассистент-корректор резюме для IT-джунов под российский рынок труда.
 
-Пользователь загружает резюме (а если его нет — описывает себя текстом). JunMate `в диалоге` распознаёт карьерный трек, делает честный анализ пробелов под целевую роль и дозаполняет резюме под формат `hh.ru` — строго по фактам пользователя, без выдуманного опыта. На выходе — готовое к скачиванию PDF-резюме и подборка курсов (Stepik/ODS/Karpov) под выявленные пробелы. 
+Пользователь загружает резюме (а если его нет — описывает себя текстом). JunMate `в диалоге` распознаёт карьерный трек, делает честный анализ пробелов под целевую роль и дозаполняет резюме под формат `hh.ru` — строго по фактам пользователя, без выдуманного опыта. На выходе — готовое к скачиванию PDF-резюме корректной кириллицей и кликабельными ссылками.
 
-**Ценность**: даже из тонкого профиля собрать честное резюме и показать конкретный следующий шаг, а не приукрасить то, чего нет.
+**Ценность**: даже из тонкого профиля собрать честное структурированное резюме — не приукрашивая то, чего нет. 
+Главный принцип — **GROUNDING**: система не фабрикует факты.
+
+🔗 **[Попробовать вживую](https://junmate-resumecopilot.streamlit.app)**
 
 
 ## Как это работает
@@ -24,39 +27,89 @@ Stateful-диалог над каноническим Profile (JSON). Конве
 **Ключевые принципы:** GROUNDING (агенты не выдумывают факты), слияние данных делает детерминированный код (`core/merge.py`), а не модель; формат hh.ru применяется только на рендере.
 
 
-## Стек
-
-Python 3.12 · Streamlit · pydantic v2 · pdfplumber (вход) · weasyprint (PDF-выход). 
+## LLM models
 
 LLM — через proxyapi (OpenAI-совместимый), `gpt-4.1-mini` как основная модель, бесплатные модели OpenRouter как фоллбэк. 
 
-Деплой — Streamlit Community Cloud.
+Деплой — Streamlit Community Cloud (авто-деплой на push).
+
+
+## Качество (evaluation)
+
+- **Классификация трека (A2):** 90–100% accuracy на размеченном наборе из 10 резюме, стабильность ответов 100%. Подробности и error-analysis — в [`eval/EVAL_RESULTS.md`](eval/EVAL_RESULTS.md).
+- **Grounding (A5→A6):** 3/3 без выдуманных фактов на контрольной выборке.
+- **Тесты:** детерминированное ядро (merge, PDF I/O) покрыто юнит-тестами (pytest), автопрогон через `CI` на каждый push.
 
 
 ## Запуск
 
 ```bash
+git clone https://github.com/AlekseyYudin-161/JunMate.git
+
+cd JunMate
+
+cp .env.example .env
+
+nano .env                                  # Заполните .env файл
+
+python3 -m venv .venv
+
+source .venv/bin/activate                  # On Windows use: .venv\Scripts\activate
+
 pip install -r requirements.txt
+
 streamlit run app.py
 ```
 
+
+## Архитектура
+
+app.py                 — точка входа, роутинг экранов
+
+screens/               — welcome (загрузка), chat (диалог + рендер + PDF)
+
+core/                  — config, schemas, llm, merge, pdf_in, pdf_out, state
+
+agents/                — parser, track, matcher, turn, rewriter, critic (A1–A6)
+
+agents/prompts/        — эталонные тексты системных промптов (документация)
+
+tests/                 — детерминированные юнит-тесты
+
+eval/                  — датасет, скрипт оценки, EVAL_RESULTS.md
+
+
 ## Ограничения
 
-Сканы-PDF (без текстового слоя) не распознаются — для таких случаев есть ручной ввод текстом. Качество извлечения зависит от структурированности исходного резюме.
+- **Сканы-PDF** (без текстового слоя) не распознаются — для таких случаев есть ручной ввод текстом.
+- **Ссылки-якоря в hh-PDF:** GitHub/Telegram, сохранённые как гиперссылки под видимым текстом, парсер не извлекает напрямую — добираются в диалоге (надёжный фикс — в roadmap).
+- Качество извлечения зависит от структурированности исходного резюме; `gpt-4.1-mini` недетерминирован (граница Research/Education для академических джунов размыта).
 
 
-# Статус разработки согласно `JunMate_build_guide_v3.2.md`
+## Roadmap
 
-Проект в активной разработке (трек Student, SOLO разработчик).
+- Извлечение URL из аннотаций PDF (`/Annots`) — автоматический сбор ссылок-якорей.
+- Подбор курсов (Stepik / ODS / Karpov) под выявленные пробелы.
+- Расширение покрытия полей hh.ru (контакты-расширения, доп. секции).
+- Вынос промптов из кода в загружаемые файлы.
+- Миграция UI на NiceGUI (release v2).
 
-### Реализовано 4/5 проекта: 
+---
 
-- ✅ Каркас приложения, провайдер-агностичный LLM-клиент (force-JSON, repair, fallback по тирам, учёт токенов/стоимости).
-- ✅ Приём резюме (PDF/текст), парсинг (A1), классификация трека (A2).
-- gap-анализ (A3). Проверено на реальных hh.ru-резюме.
-- Ядро диалога (A4), рендер hh.ru (A5) и PDF — целевой MVP.
-- Критик (A6)
+Трек `Student` · solo-разработка · хакатон `Kodik Launchpad`.
 
-### Еще реализовать (TASK 1.3 - TASK 5)
-- курсы под пробелы, eval.
 
+## Технологии проекта
+
+![Python](https://img.shields.io/badge/Python_3.12-FFFFFF?style=for-the-badge&logo=python&logoColor=306998&color=000000)
+![Streamlit](https://img.shields.io/badge/Streamlit_1.58.0-FFFFFF?style=for-the-badge&logo=streamlit&logoColor=FF4B4B&color=000000)
+![Pydantic](https://img.shields.io/badge/Pydantic_2.13.4-FFFFFF?style=for-the-badge&logo=pydantic&logoColor=306998&color=000000)
+![Pylint](https://img.shields.io/badge/Pylint_3.3.5-FFFFFF?style=for-the-badge&logo=Pylint&logoColor=306998&color=000000)
+![Pytest](https://img.shields.io/badge/Pytest_9.1.1-FFFFFF?style=for-the-badge&logo=pytest&logoColor=306998&color=000000)
+
+
+![PDFplumber](https://img.shields.io/badge/PDFplumber_0.11.10-FFFFFF?style=for-the-badge&logo=PDFplumber&logoColor=306998&color=000000)
+![fpdf2](https://img.shields.io/badge/fpdf2_2.8.7-FFFFFF?style=for-the-badge&logo=PDFplumber&logoColor=306998&color=000000)
+
+
+![OpenAI](https://img.shields.io/badge/OpenAI_2.43.0-FFFFFF?style=for-the-badge&logo=ai&logoColor=306998&color=000000)

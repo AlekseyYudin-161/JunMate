@@ -47,9 +47,9 @@ Python 3.12,
 Streamlit (chat_message/chat_input/write_stream/session_state/fragment/progress/dialog/download_button), 
 pydantic v2, 
 OpenRouter (httpx/openai SDK), 
-pdfplumber (pypdf фоллбэк),
-weasyprint (PDF), 
-streamlit-authenticator (опц.). 
+Proxyapi (httpx/openai SDK совместимый) | agentplatform (httpx/openai SDK совместимый) - при масштабировании,
+weasyprint (PDF) | fpdf2 - если проблемы с деплоем, 
+streamlit-authenticator (опционально/при масштабировании вне marketplace Kodik IDE). 
 Деплой — Streamlit Community Cloud (см. docs/JunMate_build_guide_v3.2.md §3).
 
 Streamlit-нюансы: всё состояние в session_state; honest progress по стадиям; стоп-кнопка — непростой паттерн (fragment+поток+флаг), помечена опциональной.
