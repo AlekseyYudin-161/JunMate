@@ -12,7 +12,7 @@
 ## Демо
 📹 [Видео-демонстрация youtube](https://youtu.be/B-h7gtEM6HY) — полный процесс работы.
 
-[Видео-демонстрация googleDrive](https://drive.google.com/file/d/1XxDhgPxNDoJIhsmh0d1YCyrZArZ9bngkr/view?usp=sharing)
+[Видео-демонстрация GoogleDrive](https://drive.google.com/file/d/1xDhgPxNDoJIhsmh0d1YCyrZArZ9bngkr/view?usp=sharing)
 
 🔗 **[Попробовать вживую](https://junmate-resumecopilot.streamlit.app)** — рабочее приложение (может быть на паузе для экономии ресурсов)
 
