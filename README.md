@@ -1,7 +1,6 @@
 > Required Notice: Copyright 2026 Aleksey Yudin (https://github.com/AlekseyYudin-161)
 
 [![CI](https://github.com/AlekseyYudin-161/JunMate/actions/workflows/ci.yml/badge.svg)](https://github.com/AlekseyYudin-161/JunMate/actions/workflows/ci.yml)
-[![Live Demo](https://img.shields.io/badge/Live_Demo-Streamlit-FF4B4B?logo=streamlit)](https://junmate-resumecopilot.streamlit.app)
 
 # JunMate — разговорный ассистент-корректор резюме для IT-джунов под российский рынок труда.
 
@@ -10,7 +9,9 @@
 **Ценность**: даже из тонкого профиля собрать честное структурированное резюме — не приукрашивая то, чего нет. 
 Главный принцип — **GROUNDING**: система не фабрикует факты.
 
-🔗 **[Попробовать вживую](https://junmate-resumecopilot.streamlit.app)**
+## Демо
+📹 [Видео-демонстрация](https://youtu.be/B-h7gtEM6HY)(https://drive.google.com/file/d/1xDhgPxNDoJIhsmh0d1YCyrZArZ9bngkr/view?usp=sharing) — полный процесс работы.
+🔗 **[Попробовать вживую](https://junmate-resumecopilot.streamlit.app)** — рабочее приложение (может быть на паузе для экономии ресурсов)
 
 
 ## Как это работает
