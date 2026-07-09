@@ -10,9 +10,9 @@
 Главный принцип — **GROUNDING**: система не фабрикует факты.
 
 ## Демо
-📹 [Видео-демонстрация youtube](https://youtu.be/B-h7gtEM6HY) — полный процесс работы.
+📹 [Видео-демонстрация youtube](https://youtu.be/pVZP7HY1sqM) — полный процесс работы.
 
-[Видео-демонстрация GoogleDrive](https://drive.google.com/file/d/1xDhgPxNDoJIhsmh0d1YCyrZArZ9bngkr/view?usp=sharing)
+[Видео-демонстрация GoogleDrive](https://drive.google.com/file/d/1yidEE0xDeYOeYr5Dz969nu1MjW5_aWTw/view?usp=sharing)
 
 🔗 **[Попробовать вживую](https://junmate-resumecopilot.streamlit.app)** — рабочее приложение (может быть на паузе для экономии ресурсов)
 
