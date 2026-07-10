@@ -71,7 +71,7 @@ class Profile(BaseModel):
                     lang = item.get("language") or item.get("name") or ""
                     level = item.get("level") or ""
                     out.append(f"{lang} {level}".strip())
-                else:                                                       # {'Английский': 'B2'}
+                else:
                     for k, val in item.items():
                         out.append(f"{k} {val}".strip())
         return out

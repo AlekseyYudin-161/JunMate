@@ -8,6 +8,7 @@ from fpdf.enums import XPos, YPos
 
 def _clean(text: str) -> str:
     """Убирает markdown-звёздочки (**bold**, *italic*, _underscore_) — fpdf2 их не парсит."""
+
     text = text.replace("**", "").replace("*", "")
     text = re.sub(r'(?<!\w)_(.+?)_(?!\w)', r'\1', text)
     return text
@@ -15,6 +16,7 @@ def _clean(text: str) -> str:
 
 def generate_pdf(markdown_text: str) -> bytes:
     """Рендерит Markdown-текст в PDF байты."""
+
     pdf = FPDF()
     pdf.set_margins(15, 15, 15)                     # явные поля слева/сверху/справа
     pdf.add_page()

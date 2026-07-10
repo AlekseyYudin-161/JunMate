@@ -14,11 +14,12 @@ PROMPT = """
 """
 
 def critique_resume(
-    profile: Profile, 
-    history: list[dict], 
+    profile: Profile,
+    history: list[dict],
     content_markdown: str
 ) -> Critique:
     """Проверяет резюме на галлюцинации и полноту."""
+
     user_content = f"""
     Profile: {profile.model_dump_json()}
     History: {history}

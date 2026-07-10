@@ -11,6 +11,7 @@ from core.schemas import Profile
 
 def render_upload_screen() -> None:
     """Рендерит экран входа с двумя путями."""
+
     st.header("🚀 JunMate")
     st.subheader("Персонализированная корректировка вашего резюме под hh.ru")
     st.success("""
@@ -93,6 +94,7 @@ def render_upload_screen() -> None:
 
 def _process_pdf(pdf_file) -> None:
     """Обрабатывает загруженный PDF."""
+
     progress_bar = st.progress(0, text="Извлечение текста...")
 
     try:
@@ -108,12 +110,14 @@ def _process_pdf(pdf_file) -> None:
 
 def _process_text(text: str) -> None:
     """Обрабатывает текстовое описание."""
+
     progress_bar = st.progress(0, text="Парсинг описания...")
     _analyze_and_store(text, progress_bar)
 
 
 def _analyze_and_store(text: str, progress_bar) -> None:
     """Парсит текст через A1 и сохраняет Profile."""
+
     try:
         # A1: Parser
         profile: Profile = parse_resume(text)

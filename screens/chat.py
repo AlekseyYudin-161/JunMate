@@ -19,6 +19,7 @@ def _safe_filename(profile) -> str:
     Создает корректное имя PDF: 
     ФИО_роль_CV_дата.pdf, без недопустимых в имени файла символов.
     """
+
     name = profile.full_name or "resume"
     role = profile.target_role or "CV"
     date = datetime.now().strftime("%d-%m-%Y")
@@ -59,6 +60,7 @@ def reset_dialog():
 
 def render_chat_screen() -> None:
     """Рендерит экран диалога."""
+
     st.header("💬 Диалог с JunMate")
 
     profile = get_profile()

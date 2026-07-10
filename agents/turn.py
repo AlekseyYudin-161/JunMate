@@ -37,6 +37,7 @@ def get_next_turn(
     user_message: str
 ) -> TurnResult:
     """Вызывает LLM для получения следующего шага диалога."""
+
     user_content = f"""
     Profile: {profile.model_dump_json()}
     History: {history}

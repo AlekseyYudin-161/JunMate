@@ -17,6 +17,7 @@ PROMPT = """
 
 def classify_track(profile: Profile) -> TrackResult:
     """Определяет трек (Industry/Research/Education/Startup) через LLM."""
+
     return call_llm(
         system=PROMPT,
         user=profile.model_dump_json(),

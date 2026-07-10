@@ -11,6 +11,7 @@ PROMPT = """
 
 def match_skills(profile: Profile, target_role: str) -> SkillMatch:
     """Анализирует соответствие навыков профиля целевой роли."""
+
     user_content = f"Profile: {profile.model_dump_json()}\nTarget Role: {target_role}"
 
     return call_llm(

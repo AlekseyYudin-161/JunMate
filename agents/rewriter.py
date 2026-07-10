@@ -28,6 +28,7 @@ def rewrite_resume(
     fixes: list[str] = None
 ) -> ResumeOutput:
     """Формирует итоговое резюме."""
+
     user_content = f"""
     Profile: {profile.model_dump_json()}
     Track: {track}

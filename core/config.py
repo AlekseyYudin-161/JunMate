@@ -13,7 +13,6 @@ PROVIDERS = {
     "proxyapi": {
         "base_url": "https://api.proxyapi.ru/openai/v1",
         "key_env": "PROXYAPI_API_KEY",
-        # "extra_headers": {"HTTP-Referer": "https://junmate.streamlit.app", "X-Title": "JunMate"},
         "extra_headers": {},
     },
     "openrouter": {
@@ -41,7 +40,6 @@ MODEL_TIERS = {
     "light": [
         {"provider": "proxyapi", "model": "gpt-4.1-nano"},
         {"provider": "proxyapi", "model": "gpt-4.1-mini"},
-        # {"provider": "openrouter", "model": "openai/gpt-oss-120b:free"},
     ],
     "heavy": [
         {"provider": "proxyapi", "model": "gpt-4.1-mini"},
@@ -61,6 +59,7 @@ AGENT_TIER = {
 
 def get_api_key(provider: str) -> str:
     """Возвращает API-ключ провайдера: st.secrets → .env."""
+
     key_env = PROVIDERS[provider]["key_env"]
     if hasattr(st, "secrets") and key_env in st.secrets:
         return st.secrets[key_env]

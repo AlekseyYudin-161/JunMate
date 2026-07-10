@@ -20,6 +20,8 @@ from agents.critic import critique_resume
 ONLY_IDS = None
 
 def load_dataset():
+    """Читает labels.json и тексты резюме из eval/dataset (с фильтром ONLY_IDS)."""
+
     with open("eval/labels.json", "r", encoding="utf-8") as f:
         labels = json.load(f)
 
@@ -40,6 +42,10 @@ def load_dataset():
 
 
 def run_eval():
+    """Прогоняет агентов на датасете: accuracy трека (A1→A2, 2 прогона),
+    grounding (A1→A5→A6 на контрольных id), замер latency. Печатает таблицы и итог.
+    """
+
     dataset = load_dataset()
     print(f"--- Загружено {len(dataset)} резюме ---\n")
 

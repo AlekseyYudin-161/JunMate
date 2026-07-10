@@ -23,6 +23,7 @@ languages — список строк вида "Английский B2".
 
 def parse_resume(text: str) -> Profile:
     """Парсит текст резюме в Profile."""
+
     return call_llm(
         system=PROMPT,
         user=text,

@@ -11,6 +11,7 @@ logging.getLogger("pdfminer").setLevel(logging.ERROR)   # заглушение w
 
 def extract_text(pdf_bytes: bytes) -> str:
     """Извлекает текст из PDF. Если текста нет (скан) — выбрасывает ValueError."""
+
     text_content = ""
 
     # 1. Попытка через pdfplumber (лучше сохраняет структуру)

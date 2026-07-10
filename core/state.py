@@ -5,6 +5,7 @@ from core.schemas import Profile
 
 def init_state() -> None:
     """Инициализирует session_state базовыми ключами."""
+
     if "profile" not in st.session_state:
         st.session_state.profile = None
     if "messages" not in st.session_state:
@@ -18,6 +19,7 @@ def init_state() -> None:
 
 def get_profile() -> Profile:
     """Возвращает текущий Profile из session_state."""
+
     data = st.session_state.get("profile")
     if data is None:
         return Profile()

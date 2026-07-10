@@ -13,6 +13,7 @@ T = TypeVar("T", bound=BaseModel)
 
 def _log_usage(agent: str, model: str, resp) -> None:
     """Логирует токены и стоимость вызова по resp.usage."""
+
     usage = getattr(resp, "usage", None)
 
     if usage is None:
@@ -23,7 +24,7 @@ def _log_usage(agent: str, model: str, resp) -> None:
     pout = getattr(usage, "completion_tokens", 0) or 0
     price = MODEL_PRICING.get(model, {"in": 0.0, "out": 0.0})
     cost = pin * price["in"] + pout * price["out"]
-    logger.info("[%s] %s | in=%d out=%d | ~%.4f ₽", agent, model, pin, pout, cost)  # lazy formatting: %s-str, %d-decimal, %.4f - float
+    logger.info("[%s] %s | in=%d out=%d | ~%.4f ₽", agent, model, pin, pout, cost)
 
 
 def call_llm(
@@ -47,7 +48,8 @@ def call_llm(
         if not api_key:
             continue
 
-        client = OpenAI(base_url=cfg["base_url"], api_key=api_key, max_retries=0)   # ровно 1 сетевой запрос
+        # ровно 1 сетевой запрос
+        client = OpenAI(base_url=cfg["base_url"], api_key=api_key, max_retries=0)
         extra_headers = cfg.get("extra_headers", {})
         raw = "{}"
 
@@ -70,19 +72,19 @@ def call_llm(
             _log_usage(agent, model, resp)
             return schema.model_validate(data)
 
-        except RateLimitError as e:                                                                     # error 429
+        except RateLimitError as e:
             logger.error("\n[%s] Rate limit exceeded for %s: %s\n", agent, model, e)
             raise e  # Сразу наверх
 
-        except APIStatusError as e:                                                                     # errors 401/403/404
+        except APIStatusError as e:
             logger.warning("\n[%s] API error %s for %s: %s\n", agent, e.status_code, model, e.message)
             last_error = e
-            continue  # К следующей модели
+            continue                                            # К следующей модели
 
         except (json.JSONDecodeError, ValidationError) as e:
             logger.info("\n[%s] Parsing error for %s, attempting repair: %s\n", agent, model, e)
             last_error = e
-            # Попытка repair: повторный вызов с подсказкой
+
             try:
                 repair_user = (
                     f"Предыдущий ответ был невалидным JSON или не соответствовал схеме. "

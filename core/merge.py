@@ -10,11 +10,13 @@ KEYED_LISTS = {
 
 
 def _key(item: dict, fields: tuple) -> tuple:
+    """ Ключ для сравнения элементов списка по заданным полям. """
     return tuple((item or {}).get(f) for f in fields)
 
 
 def merge_profile(profile: dict, patch: dict) -> dict:
     """Применяет patch к profile детерминированно. Модель НЕ перезаписывает profile целиком."""
+
     result = deepcopy(profile)
     for k, v in (patch or {}).items():
         if k in SCALAR_LISTS and isinstance(v, list):
