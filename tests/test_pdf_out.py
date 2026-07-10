@@ -3,7 +3,6 @@
 разделители ---) и отдаёт валидный PDF. Защита от багов рендера вроде «• --».
 """
 
-import pytest
 from core.pdf_out import generate_pdf
 
 def test_returns_valid_pdf():
