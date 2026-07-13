@@ -1,0 +1,25 @@
+# Kodik Hosting local analysis. Managed by Kodik.
+configVersion = 1
+appId = ""
+deploymentId = ""
+deploymentUrl = ""
+workspacePath = "/Users/alexey_macos/Documents/ITjob/Pet-projects/JunMate"
+status = "hostable"
+hostable = true
+projectName = "JunMate"
+summary = "Streamlit application detected and successfully validated with Docker."
+runtime = "python"
+framework = "streamlit"
+packageManager = "pip"
+installCommand = "pip install -r requirements.txt"
+buildCommand = ""
+runCommand = "streamlit run app.py --server.port=8501 --server.address=0.0.0.0"
+port = 8501
+healthcheckPath = "/_stcore/health"
+dockerfilePath = ".kodik/Dockerfile"
+requiredEnvVars = ["OPENROUTER_API_KEY", "PROXYAPI_API_KEY"]
+optionalEnvVars = []
+envVarsJson = "[]"
+blockers = []
+updatedAt = "2026-07-11T16:30:00.000Z"
+
