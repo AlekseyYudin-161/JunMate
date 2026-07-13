@@ -14,7 +14,7 @@
 
 [Видео-демонстрация GoogleDrive](https://drive.google.com/file/d/1yidEE0xDeYOeYr5Dz969nu1MjW5_aWTw/view?usp=sharing)
 
-🔗 **[Попробовать вживую](https://junmate-resumecopilot.streamlit.app)** — рабочее приложение (может быть на паузе для экономии ресурсов)
+🔗 **[Попробовать вживую](https://junmate-resume-copilot.streamlit.app)** — рабочее приложение (может быть на паузе для экономии ресурсов)
 
 
 ## Как это работает
