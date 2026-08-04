@@ -10,6 +10,11 @@ MAX_QUESTIONS = 6                                          # основных в
 REFINE_QUESTIONS = 3                                       # вопросов добора после «Доделать»
 
 PROVIDERS = {
+    "kodikrouter": {
+        "base_url": "https://api.kodikrouter.ru/v1",
+        "key_env": "KODIK_API_KEY",
+        "extra_headers": {},
+    },
     "proxyapi": {
         "base_url": "https://api.proxyapi.ru/openai/v1",
         "key_env": "PROXYAPI_API_KEY",
@@ -24,9 +29,9 @@ PROVIDERS = {
 
 # ₽ за 1 токен (input, output).
 MODEL_PRICING = {
-    # agentplatform
-    # "openai/gpt-5-mini":   {"in": 27 / 1_000_000, "out": 216 / 1_000_000},
-    # "openai/gpt-4.1-mini": {"in": 44 / 1_000_000, "out": 173 / 1_000_000},
+    # kodikrouter
+    # "openai/gpt-5-mini":   {"in": 20 / 1_000_000, "out": 159 / 1_000_000},
+    "openai/gpt-4.1-mini": {"in": 32 / 1_000_000, "out": 127 / 1_000_000},
 
     # proxyapi
     "gpt-4.1-nano": {"in": 26 / 1_000_000, "out": 104 / 1_000_000},
@@ -42,6 +47,7 @@ MODEL_TIERS = {
         {"provider": "proxyapi", "model": "gpt-4.1-mini"},
     ],
     "heavy": [
+        {"provider": "kodikrouter", "model": "openai/gpt-4.1-mini"},
         {"provider": "proxyapi", "model": "gpt-4.1-mini"},
         {"provider": "openrouter", "model": "openai/gpt-oss-120b:free"},
     ],
