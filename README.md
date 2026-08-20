@@ -4,6 +4,18 @@
 
 # JunMate — разговорный ассистент-корректор резюме для IT-джунов под российский рынок труда.
 
+------------------------
+
+## About (EN)
+
+JunMate is a conversational résumé assistant for junior IT candidates targeting the Russian job market. It takes a résumé (or a free-text self-description), detects the career track in a dialogue, runs an honest gap analysis for the target role, and renders a downloadable PDF (proper Cyrillic, clickable links) in an hh.ru-friendly format.
+
+Under the hood: 6 LLM agents (parsing → track classification → gap analysis → dialogue → PDF rendering → critic) with pydantic-structured handoffs. The core principle is **grounding** — the system does not fabricate facts; an LLM-as-a-judge critic enforces factuality (eval: 3/3 runs with zero fabrications). Track-classification accuracy is 90–100% on a labeled set; the deterministic core is unit-tested with CI on GitHub Actions; deployed on Streamlit Cloud.
+
+Results: finalist of Kodik Launchpad ("Kodik's Choice", Starter) and 10/49 in "Community Choice" (Advanced) — [official results](https://hackathon.kodik.ru/results#nominations). **[Try it live](https://junmate-resume-copilot.streamlit.app)** (may be paused to save resources). The rest of this README is in Russian.
+
+------------------------
+
 Пользователь загружает резюме (а если его нет — описывает себя текстом). JunMate `в диалоге` распознаёт карьерный трек, делает честный анализ пробелов под целевую роль и дозаполняет резюме под формат `hh.ru` — строго по фактам пользователя, без выдуманного опыта. На выходе — готовое к скачиванию PDF-резюме корректной кириллицей и кликабельными ссылками.
 
 **Ценность**: даже из тонкого профиля собрать честное структурированное резюме — не приукрашивая то, чего нет. 
