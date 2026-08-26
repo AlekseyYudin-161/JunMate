@@ -12,7 +12,7 @@ JunMate is a conversational résumé assistant for junior IT candidates targetin
 
 Under the hood: 6 LLM agents (parsing → track classification → gap analysis → dialogue → PDF rendering → critic) with pydantic-structured handoffs. The core principle is **grounding** — the system does not fabricate facts; an LLM-as-a-judge critic enforces factuality (eval: 3/3 runs with zero fabrications). Track-classification accuracy is 90–100% on a labeled set; the deterministic core is unit-tested with CI on GitHub Actions; deployed on Streamlit Cloud.
 
-Results: finalist of Kodik Launchpad ("Kodik's Choice", Starter) and 10/49 in "Community Choice" (Advanced) — [official results](https://hackathon.kodik.ru/results#nominations). **[Try it live](https://junmate-resume-copilot.streamlit.app)** (may be paused to save resources). The rest of this README is in Russian.
+Results: finalist of Kodik Launchpad ("Kodik's Choice", Starter) [official letter](docs/kodik_launchpad_finalist_letter_Aleksey_Yudin.pdf) and 10/49 in "Community Choice" (Advanced) [official results](https://hackathon.kodik.ru/results#nominations). **[Try it live](https://junmate-resume-copilot.streamlit.app)** (may be paused to save resources). The rest of this README is in Russian.
 
 ------------------------
 
@@ -28,6 +28,9 @@ Results: finalist of Kodik Launchpad ("Kodik's Choice", Starter) and 10/49 in "C
 
 🔗 **[Попробовать вживую](https://junmate-resume-copilot.streamlit.app)** — рабочее приложение (может быть на паузе для экономии ресурсов)
 
+## Результаты
+
+Финалист(топ-3) номинации "Выбор Kodik", уровень "Starter" [официальное письмо](docs/kodik_launchpad_finalist_letter_Aleksey_Yudin.pdf) и 10/49 место в номинации "Выбор комьюнити", уровень "Advanced" [официальные результаты](https://hackathon.kodik.ru/results#nominations) 
 
 ## Как это работает
 
